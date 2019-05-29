@@ -5,8 +5,10 @@
 
 fun main(args : Array<String>) {
     try {
-        val ontologyModelManager = OntologyModelManager("file:ontology/knowrob.owl")
-        ontologyModelManager.showNumberStatementsFromActualModel(10)
+        val ontologyModelManager = OntologyModelManager("file:ontology/pizza.owl")
+        ontologyModelManager.showNumberOfStatementsFromActualModel(10)
+
+
 
     }catch (e: Exception){
         println(e.toString())

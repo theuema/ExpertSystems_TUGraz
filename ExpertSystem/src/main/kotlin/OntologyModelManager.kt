@@ -10,9 +10,9 @@ class OntologyModelManager(private val filename: String) {
     private val model: Model
 
     init {
-        ontologyModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null)
         model = FileManager.get().loadModel(filename)
-        println("Ontology Model: " + filename + " loaded!")
+        ontologyModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model)
+        println("Model: " + filename + " loaded!")
     }
 
     // Functions
@@ -25,27 +25,25 @@ class OntologyModelManager(private val filename: String) {
         return ontologyModel
     }
 
-    fun showNumberStatementsFromActualModel(number: Int){
+    fun showNumberOfStatementsFromActualModel(number: Int) {
         val iter = model.listStatements()
 
         // print out the predicate, subject and object of each statement
         var cnt = 0
-
-        println("-> first statement:")
         while (iter.hasNext() && cnt < number) {
             val stmt = iter.nextStatement()         // get next statement
             val subject = stmt.getSubject()         // get the subject
             val predicate = stmt.getPredicate()     // get the predicate
             val obj = stmt.getObject()              // get the object
 
-            println("this is the subject: " + subject.toString())
-            println("this is the predicate: " + predicate.toString() + " !")
+            System.out.print("subject: " + subject.toString() + "  ")
+            System.out.print("predicate: " + predicate.toString() + "  ")
 
-            if (obj is Resource) println("obj is a resource: " + obj.toString())
-            else println("obj is a literal: \"" + obj.toString() + "\"")
+            if (obj is Resource) System.out.print("resource: " + obj.toString() + "  ")
+            else System.out.print("literal: " + obj.toString() + "  ")
 
             cnt++
-            if (cnt < number)println("-> next statement:")
+            System.out.print("  -> end of statement\n")
         }
     }
 }
