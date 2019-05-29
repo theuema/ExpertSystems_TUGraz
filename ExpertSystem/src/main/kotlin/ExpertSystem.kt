@@ -4,5 +4,7 @@
 
 
 fun main(args : Array<String>) {
-    val ontologyModelManager = OntologyModelManager("file:ontology/knowrob.owl")
+    var ontologyModelManager = OntologyModelManager("file:ontology/knowrob.owl")
+    var model = ontologyModelManager.getModel()
+
 }

@@ -18,6 +18,10 @@ class OntologyModelManager(private val filename: String) {
         }
     }
 
+    fun getModel(): Model? {
+        return model
+    }
+
     fun getOntologyModel(): OntModel? {
         return ontologyModel
     }
