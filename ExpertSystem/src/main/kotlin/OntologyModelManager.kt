@@ -1,32 +1,27 @@
 import org.apache.jena.ontology.OntModel
 import org.apache.jena.ontology.OntModelSpec
-import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.util.FileManager
 import org.apache.jena.rdf.model.Resource
 
 class OntologyModelManager(private val filename: String) {
     private val ontologyModel: OntModel
-    private val model: Model
 
     init {
-        model = FileManager.get().loadModel(filename)
+        val model = FileManager.get().loadModel(filename)
         ontologyModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model)
+        //ontologyModel.read(filename)  // seems like it is not needed?
         println("Model: " + filename + " loaded!")
     }
 
     // Functions
-
-    fun getModel(): Model {
-        return model
-    }
 
     fun getOntologyModel(): OntModel {
         return ontologyModel
     }
 
     fun showNumberOfStatementsFromActualModel(number: Int) {
-        val iter = model.listStatements()
+        val iter = ontologyModel.listStatements()
 
         // print out the predicate, subject and object of each statement
         var cnt = 0

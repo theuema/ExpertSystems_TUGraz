@@ -8,8 +8,6 @@ fun main(args : Array<String>) {
         val ontologyModelManager = OntologyModelManager("file:ontology/pizza.owl")
         ontologyModelManager.showNumberOfStatementsFromActualModel(10)
 
-
-
     }catch (e: Exception){
         println(e.toString())
     }
