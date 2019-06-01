@@ -8,7 +8,7 @@ import org.apache.jena.ontology.OntClass
 fun main(args : Array<String>) {
     try {
         // ontology definitions
-        val ontName = "knowrob"
+        val ontName = "GeometricShape"
         val ontNamespace = "http://ias.cs.tum.edu/kb/"+ ontName +".owl#"
         val ontModelManager = OntologyModelManager("file:ontology/"+ ontName + ".owl")
 
