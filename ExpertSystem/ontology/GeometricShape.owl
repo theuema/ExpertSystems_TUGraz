@@ -1,0 +1,423 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape">
+    <Prefix name="" IRI="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Declaration>
+        <Class IRI="#Action"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Arm"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ArmGrabThing"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ArmMoveToPosition"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ArmPutThingFromAToB"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ArmReleaseThing"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Characteristic"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Condition"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cone"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cube"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cylinder"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Event"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GeometricShape"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LeftArm"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PartialOrdering"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Position"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PostCondition"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PreCondition"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Pyramid"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RightArm"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Robot"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Sphere"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Thing"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#armMovement"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#at"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#grab"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#happensAfterInOrdering"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#happensBeforeInOrdering"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasCharacteristic"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#moveTo"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#orderingConstraints"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#release"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#leftArm1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#position1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#position2"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#positionMovement"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#pyramid1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#rightArm1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#sphere1"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class IRI="#ArmGrabThing"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#grab"/>
+            <Class IRI="#Thing"/>
+        </ObjectSomeValuesFrom>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#ArmMoveToPosition"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#moveTo"/>
+            <Class IRI="#Position"/>
+        </ObjectSomeValuesFrom>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#ArmPutThingFromAToB"/>
+        <ObjectIntersectionOf>
+            <Class IRI="#ArmGrabThing"/>
+            <Class IRI="#ArmMoveToPosition"/>
+            <Class IRI="#ArmReleaseThing"/>
+        </ObjectIntersectionOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#ArmPutThingFromAToB"/>
+        <ObjectHasValue>
+            <ObjectProperty IRI="#hasCharacteristic"/>
+            <NamedIndividual IRI="#positionMovement"/>
+        </ObjectHasValue>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#ArmReleaseThing"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#release"/>
+            <Class IRI="#Thing"/>
+        </ObjectSomeValuesFrom>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class IRI="#Action"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Arm"/>
+        <Class IRI="#Robot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ArmGrabThing"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ArmMoveToPosition"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ArmPutThingFromAToB"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ArmReleaseThing"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Condition"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cone"/>
+        <Class IRI="#GeometricShape"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cube"/>
+        <Class IRI="#GeometricShape"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cylinder"/>
+        <Class IRI="#GeometricShape"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GeometricShape"/>
+        <Class IRI="#Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LeftArm"/>
+        <Class IRI="#Arm"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PartialOrdering"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PostCondition"/>
+        <Class IRI="#Condition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PreCondition"/>
+        <Class IRI="#Condition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Pyramid"/>
+        <Class IRI="#GeometricShape"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RightArm"/>
+        <Class IRI="#Arm"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sphere"/>
+        <Class IRI="#GeometricShape"/>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="#Cone"/>
+        <Class IRI="#Cube"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Cone"/>
+        <Class IRI="#Cylinder"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Cone"/>
+        <Class IRI="#Pyramid"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Cone"/>
+        <Class IRI="#Sphere"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Cube"/>
+        <Class IRI="#Cylinder"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Cube"/>
+        <Class IRI="#Pyramid"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Cube"/>
+        <Class IRI="#Sphere"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Cylinder"/>
+        <Class IRI="#Pyramid"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Cylinder"/>
+        <Class IRI="#Sphere"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#LeftArm"/>
+        <Class IRI="#RightArm"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Position"/>
+        <Class IRI="#Robot"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Position"/>
+        <Class IRI="#Thing"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Pyramid"/>
+        <Class IRI="#Sphere"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Robot"/>
+        <Class IRI="#Thing"/>
+    </DisjointClasses>
+    <ClassAssertion>
+        <Class IRI="#LeftArm"/>
+        <NamedIndividual IRI="#leftArm1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Position"/>
+        <NamedIndividual IRI="#position1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Position"/>
+        <NamedIndividual IRI="#position2"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Characteristic"/>
+        <NamedIndividual IRI="#positionMovement"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Pyramid"/>
+        <NamedIndividual IRI="#pyramid1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#RightArm"/>
+        <NamedIndividual IRI="#rightArm1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Sphere"/>
+        <NamedIndividual IRI="#sphere1"/>
+    </ClassAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#at"/>
+        <NamedIndividual IRI="#pyramid1"/>
+        <NamedIndividual IRI="#position1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#at"/>
+        <NamedIndividual IRI="#sphere1"/>
+        <NamedIndividual IRI="#position1"/>
+    </ObjectPropertyAssertion>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#armMovement"/>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#at"/>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#grab"/>
+        <ObjectProperty IRI="#armMovement"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#happensAfterInOrdering"/>
+        <ObjectProperty IRI="#orderingConstraints"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#happensBeforeInOrdering"/>
+        <ObjectProperty IRI="#orderingConstraints"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#hasCharacteristic"/>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#moveTo"/>
+        <ObjectProperty IRI="#armMovement"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#orderingConstraints"/>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#release"/>
+        <ObjectProperty IRI="#armMovement"/>
+    </SubObjectPropertyOf>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#at"/>
+        <Class IRI="#Thing"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#grab"/>
+        <Class IRI="#Arm"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasCharacteristic"/>
+        <Class IRI="#Event"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#moveTo"/>
+        <Class IRI="#Arm"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#orderingConstraints"/>
+        <Class IRI="#Action"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#release"/>
+        <Class IRI="#Arm"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#at"/>
+        <Class IRI="#Position"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#grab"/>
+        <Class IRI="#Thing"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasCharacteristic"/>
+        <Class IRI="#Characteristic"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#moveTo"/>
+        <Class IRI="#Position"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#orderingConstraints"/>
+        <Class IRI="#Action"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#release"/>
+        <Class IRI="#Thing"/>
+    </ObjectPropertyRange>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+
