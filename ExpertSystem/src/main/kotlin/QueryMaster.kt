@@ -1,6 +1,5 @@
 import org.apache.jena.ontology.OntModel
 import org.apache.jena.query.*
-import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.Model
 
 class QueryMaster(private val model: Model, private val ontModel: OntModel, private val ontPrefix: String) {
