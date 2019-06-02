@@ -1,24 +1,22 @@
 import org.apache.jena.ontology.OntModel
 import org.apache.jena.ontology.OntModelSpec
+import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.util.FileManager
 import org.apache.jena.rdf.model.Resource
 
 class OntologyModelManager(private val filename: String) {
-    private val ontModel: OntModel
+    val ontModel: OntModel
+    val baseModel: Model
 
     init {
-        val baseModel = FileManager.get().loadModel(filename)
+        baseModel = FileManager.get().loadModel(filename)
         ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF, baseModel)
         //ontModel.read(filename)  // seems like it is not needed?
-        println("Model: " + filename + " loaded!")
+        println("Model: $filename loaded!")
     }
 
-    // Functions
 
-    fun getOntologyModel(): OntModel {
-        return ontModel
-    }
 
     fun showNumberOfStatementsFromActualModel(number: Int) {
         val iter = ontModel.listStatements()
@@ -31,14 +29,15 @@ class OntologyModelManager(private val filename: String) {
             val predicate = stmt.getPredicate()     // get the predicate
             val obj = stmt.getObject()              // get the object
 
-            System.out.print("subject: " + subject.toString() + "  ")
-            System.out.print("predicate: " + predicate.toString() + "  ")
+            System.out.print("subject: ${subject.toString()} ")
+            System.out.print("predicate: ${predicate.toString()} ")
 
-            if (obj is Resource) System.out.print("resource: " + obj.toString() + "  ")
-            else System.out.print("literal: " + obj.toString() + "  ")
+            if (obj is Resource) System.out.print("resource: ${obj.toString()} ")
+            else System.out.print("literal: ${obj.toString()} ")
 
             cnt++
             System.out.print("  -> end of statement\n")
         }
+        println("\n\n")
     }
 }
