@@ -28,13 +28,15 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
      *  @Info: This is no Reasoning! Tested with protege.
      *  @param queryString SELECT-query we want to execute w/o prefixes
      *  @param name of the variable we are looking for (e.g.: what "Action" we need to do next..)
+     *  @param useOntModel specifies if we need reasoning or not
      *  @return List of found objects that match the query
      */
-    fun executeModelSelectQuery(queryString: String, name: String): MutableList<Any> {
+    fun executeSelectQuery(queryString: String, name: String, useOntModel: Boolean): MutableList<Any> {
+        val m = if (useOntModel) ontModel else model
         val query = QueryFactory.create(queryPrefix + queryString)
         val ret: MutableList<Any> = mutableListOf()
 
-        QueryExecutionFactory.create(query, model).use {
+        QueryExecutionFactory.create(query, m).use {
             val results = it.execSelect() // .use{} takes advantage of java's auto-close and closes the QueryExecution; also takes care of exception handlin;
 
             while (results.hasNext()) {

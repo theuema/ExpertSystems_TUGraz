@@ -24,10 +24,11 @@ fun main(args: Array<String>) {
 
         // main
         val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
-        val results = queryMaster.executeModelSelectQuery(queryMaster.hasCharacteristicValuePositionMovement(), "Action")
+        val results = queryMaster.executeSelectQuery(queryMaster.hasCharacteristicValuePositionMovement(),
+                "Action", false)
 
-        println("RESULT::executeModelSelectQuery() returned MutalbleList<Any>: \n" +
-                "$results")
+        println("RESULT::executeSelectQuery(hasCharacteristicValuePositionMovement, \"Action\", Model)" +
+                " returned MutalbleList<Any>: \n $results")
 
     } catch (e: Exception) {
         println("MAIN CATCH:: ${e.printStackTrace()}")
