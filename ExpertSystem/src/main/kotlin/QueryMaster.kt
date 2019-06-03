@@ -60,7 +60,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         return ret
     }
 
-    // Queries
+    // old Queries do not delete!
     /** @Info: This function is no reasoning! Tested with protege.*/
     fun hasCharacteristicValuePositionMovement(): String {
         return "SELECT * " + // just return the ?Action variable; using * would return the ?Restriction and ?Value as well
@@ -68,8 +68,20 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "?Action rdfs:subClassOf :Action . " +
                 "?Action (owl:equivalentClass|^owl:equivalentClass)* ?Restriction . " + // because of possible symmetry. else: owl:equivalentClass
                 "?Restriction (rdfs:subClassOf|(owl:intersectionOf/rdf:rest*/rdf:first))* ?Value . " + // get all values of restrictions throug itersection
-                "?Value owl:onProperty :hasCharacteristic . " + //?Value has to be the same in all lines, there returns exactly the one Restriction which is exactly the equ class to our Action
+                "?Value owl:onProperty :hasCharacteristic . " + // ?Value has to be the same in all lines, there returns exactly the one Restriction which is exactly the equ class to our Action
                 "?Value owl:hasValue :positionMovement . " +
+                "}"
+    }
+
+    // new Queries
+    fun fromToPositionQuery(): String {
+        return "SELECT ?Action " +
+                "WHERE { " +
+                "?Action rdfs:subClassOf* :Action . " +
+                "?Action rdfs:subClassOf ?RestrictionFrom . " +
+                "?RestrictionFrom owl:onProperty :fromPosition . " +
+                "?Action rdfs:subClassOf ?RestrictionTo . " +
+                "?RestrictionTo owl:onProperty :toPosition . " +
                 "}"
     }
 }

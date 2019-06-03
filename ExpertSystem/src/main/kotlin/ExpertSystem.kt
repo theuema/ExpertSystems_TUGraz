@@ -27,8 +27,9 @@ fun main(args: Array<String>) {
 
         // main
         val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
-        val results = queryMaster.executeSelectQuery(queryMaster.hasCharacteristicValuePositionMovement(), false)
 
+        // new query for fromToPositionQuery
+        val results = queryMaster.executeSelectQuery(queryMaster.fromToPositionQuery(), false)
         val resultsVariable = queryMaster.getVariableFromResultSet(results, "Action")
         println("RESULT::getVariableFromResultSet(results, \"Action\")" +
                 " returned MutalbleList<Any>: \n $resultsVariable")
@@ -36,7 +37,6 @@ fun main(args: Array<String>) {
             if (it is Resource) println("Variable Resource: ${it.toString()}")
             else if (it is Literal) println("Variable Literal: ${it.getDatatypeURI()}")
         }
-
     } catch (e: Exception) {
         println("MAIN CATCH:: ${e.printStackTrace()}")
     }
