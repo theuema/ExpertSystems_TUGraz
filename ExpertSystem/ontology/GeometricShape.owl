@@ -6,8 +6,9 @@
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     xmlns:GeometricShape="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#">
-    <owl:Ontology rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape"/>
+     xmlns:GeometricShape="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#"
+     xmlns:GeometricShape1="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape"/>
     
 
 
@@ -22,35 +23,44 @@
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#condition -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#condition -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#condition">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#condition">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#endTime -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#endTime -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#endTime">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#endTime">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#fromPosition -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#eventOrdering -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#fromPosition">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#preCondition"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#eventOrdering">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#fromPosition -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#fromPosition">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#preCondition"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
         <rdfs:range>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
-                    <rdf:Description rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
@@ -58,102 +68,119 @@
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#happensAfterInOrdering -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#happensAfterInOrdering -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#happensAfterInOrdering">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#orderingConstraints"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#happensAfterInOrdering">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#orderingConstraints"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#happensBeforeInOrdering -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#happensBeforeInOrdering -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#happensBeforeInOrdering">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#orderingConstraints"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#happensBeforeInOrdering">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#orderingConstraints"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#hasCharacteristic -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasCharacteristic -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#hasCharacteristic">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasCharacteristic">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#hasSubAction -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#hasSubAction">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#ComposedAction"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#UnitAction"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#ComposedAction"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#orderingConstraints -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#nextEvent -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#orderingConstraints">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#nextEvent">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#eventOrdering"/>
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#previousEvent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#orderingConstraints -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#orderingConstraints">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
-                    <rdf:Description rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#postCondition -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#postCondition -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#postCondition">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#condition"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#postCondition">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#condition"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#preCondition -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#preCondition -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#preCondition">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#condition"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#preCondition">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#condition"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#startTime -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#previousEvent -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#startTime">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#previousEvent">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#eventOrdering"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#startTime -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#startTime">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#thingActedOn -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#thingActedOn -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#thingActedOn">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#thingActedOn">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Thing"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#toPosition -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#toPosition -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#toPosition">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#postCondition"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#toPosition">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#postCondition"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
     </owl:ObjectProperty>
     
 
@@ -169,50 +196,50 @@
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#coordinates -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#coordinates -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#coordinates">
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#coordinates">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
     </owl:DatatypeProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#timeUnit -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#timeUnit -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#timeUnit">
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#timeUnit">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
     </owl:DatatypeProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#xCoord -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#xCoord -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#xCoord">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#coordinates"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#xCoord">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#coordinates"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
     </owl:DatatypeProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#yCoord -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#yCoord -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#yCoord">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#coordinates"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#yCoord">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#coordinates"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
     </owl:DatatypeProperty>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#zCoord -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#zCoord -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#zCoord">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#coordinates"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#zCoord">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#coordinates"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
     </owl:DatatypeProperty>
     
@@ -229,234 +256,234 @@
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Action -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Action -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Action">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#InitialState"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Action">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#ComposedAction -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#ComposedAction -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#ComposedAction">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Action"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#ComposedAction">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Action"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cone -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cone -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cone">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#GeometricShape"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cube"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cylinder"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Pyramid"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Sphere"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cone">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#GeometricShape"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cube"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cylinder"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Pyramid"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Sphere"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cube -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cube -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cube">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#GeometricShape"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cylinder"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Pyramid"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Sphere"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cube">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#GeometricShape"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cylinder"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Pyramid"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Sphere"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cylinder -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cylinder -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Cylinder">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#GeometricShape"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Pyramid"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Sphere"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Cylinder">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#GeometricShape"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Pyramid"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Sphere"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event">
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Thing"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#GeometricShape -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#GeometricShape -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#GeometricShape">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Thing"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#GeometricShape">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Grabbing -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Grabbing">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#UnitAction"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#InitialState -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#InitialState">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Event"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Moving -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Moving">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#UnitAction"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering">
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Thing"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime">
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Thing"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position">
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Thing"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PuttingThingFromAToB -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingThingFromAToB -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PuttingThingFromAToB">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#ComposedAction"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingThingFromAToB">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#ComposedAction"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#fromPosition"/>
-                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#fromPosition"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#toPosition"/>
-                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#toPosition"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#orderingConstraints"/>
-                <owl:hasValue rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering1PuttingThingFromAToB"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#orderingConstraints"/>
+                <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering1PuttingThingFromAToB"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#orderingConstraints"/>
-                <owl:hasValue rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering2PuttingThingFromAToB"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#orderingConstraints"/>
+                <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering2PuttingThingFromAToB"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#orderingConstraints"/>
-                <owl:hasValue rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering3PuttingThingFromAToB"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#orderingConstraints"/>
+                <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering3PuttingThingFromAToB"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#hasSubAction"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
                 <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Grabbing"/>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#hasSubAction"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
                 <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Moving"/>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#hasSubAction"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
                 <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Reaching"/>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#hasSubAction"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
                 <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Releasing"/>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Pyramid -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Pyramid -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Pyramid">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#GeometricShape"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Sphere"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Pyramid">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#GeometricShape"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Sphere"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Reaching -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Reaching">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#UnitAction"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Releasing -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Releasing">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#UnitAction"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Sphere -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Sphere -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Sphere">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#GeometricShape"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Sphere">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#GeometricShape"/>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Thing -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Thing"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#UnitAction -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#UnitAction">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Action"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Action"/>
     </owl:Class>
     
 
@@ -472,153 +499,183 @@
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Grabbing -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Grabbing">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Grabbing"/>
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Moving -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Moving">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Moving"/>
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering1PuttingThingFromAToB -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering1PuttingThingFromAToB -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering1PuttingThingFromAToB">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
-        <GeometricShape:happensAfterInOrdering rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Grabbing"/>
-        <GeometricShape:happensBeforeInOrdering rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Reaching"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering1PuttingThingFromAToB">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+        <GeometricShape1:happensAfterInOrdering rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
+        <GeometricShape1:happensBeforeInOrdering rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering2PuttingThingFromAToB -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering2PuttingThingFromAToB -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering2PuttingThingFromAToB">
-        <GeometricShape:happensAfterInOrdering rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Moving"/>
-        <GeometricShape:happensBeforeInOrdering rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Grabbing"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering2PuttingThingFromAToB">
+        <GeometricShape1:happensAfterInOrdering rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
+        <GeometricShape1:happensBeforeInOrdering rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering3PuttingThingFromAToB -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering3PuttingThingFromAToB -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering3PuttingThingFromAToB">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
-        <GeometricShape:happensAfterInOrdering rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Releasing"/>
-        <GeometricShape:happensBeforeInOrdering rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Moving"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering3PuttingThingFromAToB">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+        <GeometricShape1:happensAfterInOrdering rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
+        <GeometricShape1:happensBeforeInOrdering rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos1ToPos2 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos1ToPos2 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos1ToPos2">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PuttingThingFromAToB"/>
-        <GeometricShape:endTime rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#time1"/>
-        <GeometricShape:thingActedOn rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pyramid1"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos1ToPos2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingThingFromAToB"/>
+        <GeometricShape1:fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
+        <GeometricShape1:hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
+        <GeometricShape1:hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
+        <GeometricShape1:hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
+        <GeometricShape1:hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
+        <GeometricShape1:nextEvent rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos2ToPos3"/>
+        <GeometricShape1:previousEvent rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosPyr1"/>
+        <GeometricShape1:thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
+        <GeometricShape1:toPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos2"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Reaching -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos2ToPos3 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Reaching">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Reaching"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos2ToPos3">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingThingFromAToB"/>
+        <GeometricShape1:fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos2"/>
+        <GeometricShape1:hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
+        <GeometricShape1:hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
+        <GeometricShape1:hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
+        <GeometricShape1:hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
+        <GeometricShape1:thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
+        <GeometricShape1:toPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos3"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Releasing -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Releasing">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PartialOrdering"/>
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Releasing"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#initialPosPyr1 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#initialPosPyr1">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#InitialState"/>
-        <GeometricShape:fromPosition rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pos1"/>
-        <GeometricShape:thingActedOn rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pyramid1"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#initialPosSph1 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosPyr1 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#initialPosSph1">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#InitialState"/>
-        <GeometricShape:fromPosition rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pos1"/>
-        <GeometricShape:thingActedOn rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#sphere1"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosPyr1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState"/>
+        <GeometricShape1:fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
+        <GeometricShape1:thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pos1 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosSph1 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pos1">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
-        <GeometricShape:xCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</GeometricShape:xCoord>
-        <GeometricShape:yCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">2.0</GeometricShape:yCoord>
-        <GeometricShape:zCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</GeometricShape:zCoord>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosSph1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState"/>
+        <GeometricShape1:fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
+        <GeometricShape1:thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#sphere1"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pos2 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pos2">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Position"/>
-        <GeometricShape:xCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">2.0</GeometricShape:xCoord>
-        <GeometricShape:yCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">2.0</GeometricShape:yCoord>
-        <GeometricShape:zCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</GeometricShape:zCoord>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
+        <GeometricShape1:xCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</GeometricShape1:xCoord>
+        <GeometricShape1:yCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">2.0</GeometricShape1:yCoord>
+        <GeometricShape1:zCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</GeometricShape1:zCoord>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pyramid1 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos2 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pyramid1">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Pyramid"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
+        <GeometricShape1:xCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">2.0</GeometricShape1:xCoord>
+        <GeometricShape1:yCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">2.0</GeometricShape1:yCoord>
+        <GeometricShape1:zCoord rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</GeometricShape1:zCoord>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#sphere1 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos3 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#sphere1">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#Sphere"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos3">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Position"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#time0 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#time0">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime"/>
-        <GeometricShape:timeUnit rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0.0</GeometricShape:timeUnit>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Pyramid"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#time1 -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#sphere1 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#time1">
-        <rdf:type rdf:resource="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#PointInTime"/>
-        <GeometricShape:timeUnit rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</GeometricShape:timeUnit>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#sphere1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Sphere"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#time0 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#time0">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime"/>
+        <GeometricShape1:timeUnit rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0.0</GeometricShape1:timeUnit>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#time1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#time1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime"/>
+        <GeometricShape1:timeUnit rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</GeometricShape1:timeUnit>
     </owl:NamedIndividual>
     
 
@@ -634,8 +691,8 @@
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDifferent"/>
         <owl:distinctMembers rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pos1"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/thomashoedl/ontologies/2019/5/GeometricShape#pos2"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos2"/>
         </owl:distinctMembers>
     </rdf:Description>
 </rdf:RDF>
