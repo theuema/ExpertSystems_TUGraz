@@ -1,3 +1,6 @@
+import org.apache.jena.rdf.model.Literal
+import org.apache.jena.rdf.model.Resource
+
 //alltime todo: what is this warning?
 // // RDFDefaultErrorHandler - unknown-source: {W136} Relative URIs are not permitted in RDF: specifically <ont-policy.rdf>
 
@@ -24,11 +27,15 @@ fun main(args: Array<String>) {
 
         // main
         val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
-        val results = queryMaster.executeSelectQuery(queryMaster.hasCharacteristicValuePositionMovement(),
-                "Action", false)
+        val results = queryMaster.executeSelectQuery(queryMaster.hasCharacteristicValuePositionMovement(), false)
 
-        println("RESULT::executeSelectQuery(hasCharacteristicValuePositionMovement, \"Action\", Model)" +
-                " returned MutalbleList<Any>: \n $results")
+        val resultsVariable = queryMaster.getVariableFromResultSet(results, "Action")
+        println("RESULT::getVariableFromResultSet(results, \"Action\")" +
+                " returned MutalbleList<Any>: \n $resultsVariable")
+        resultsVariable.map {
+            if (it is Resource) println("Variable Resource: ${it.toString()}")
+            else if (it is Literal) println("Variable Literal: ${it.getDatatypeURI()}")
+        }
 
     } catch (e: Exception) {
         println("MAIN CATCH:: ${e.printStackTrace()}")

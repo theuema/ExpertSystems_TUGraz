@@ -24,36 +24,46 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "PREFIX : <$ontPrefix> "
     }
 
-    /** Takes a SPARQL SELECT-query String, adds the OWL-prefixes and executes the query against the model.
-     *  @Info: This is no Reasoning! Tested with protege.
-     *  @param queryString SELECT-query we want to execute w/o prefixes
-     *  @param name of the variable we are looking for (e.g.: what "Action" we need to do next..)
+    /** Takes a SPARQL SELECT-query-string, adds the OWL-prefixes and executes the query against a model.
+     *  @param selectQueryString SELECT-query we want to execute w/o prefixes
      *  @param useOntModel specifies if we need reasoning or not
-     *  @return List of found objects that match the query
+     *  @return copy of the resulting ResultSet object
      */
-    fun executeSelectQuery(queryString: String, name: String, useOntModel: Boolean): MutableList<Any> {
+    fun executeSelectQuery(selectQueryString: String, useOntModel: Boolean): ResultSet {
         val m = if (useOntModel) ontModel else model
-        val query = QueryFactory.create(queryPrefix + queryString)
+        val query = QueryFactory.create(queryPrefix + selectQueryString)
+
+        // .use{} takes advantage of java's auto-close and closes the QueryExecution
+        //        takes care of exception handling
+        QueryExecutionFactory.create(query, m).use {
+            return ResultSetFactory.copyResults(it.execSelect())
+        }
+    }
+
+    /** Takes a ResultSet and a variable name to generate a list of objects matching that name in the given query(-solution)
+     *  @param results is the outcome of a previous query as ResultSet (containing multiple QuerySolution objects)
+     *  @param name of the variable we are looking for (e.g.: the "Action" we need to do next..)
+     *  @return List of values of the specific variable, contained in the ResultSet
+     */
+    fun getVariableFromResultSet(results: ResultSet, name: String): MutableList<Any> {
         val ret: MutableList<Any> = mutableListOf()
 
-        QueryExecutionFactory.create(query, m).use {
-            val results = it.execSelect() // .use{} takes advantage of java's auto-close and closes the QueryExecution; also takes care of exception handlin;
-
-            while (results.hasNext()) {
-                val obj = results.next()
-                when (obj.get(name)) {
-                    is Resource -> ret.add(obj.getResource(name))
-                    is Literal -> ret.add(obj.getLiteral(name))
-                    else -> System.out.println("NULL SAFETY::printResult(): RDFNode $name not present in this solution.")
-                }
+        while (results.hasNext()) {
+            val obj = results.next()
+            when (obj.get(name)) {
+                is Resource -> ret.add(obj.getResource(name))
+                is Literal -> ret.add(obj.getLiteral(name))
+                else -> System.out.println("NULL SAFETY::getVariableFromResultSet(): " +
+                        "Variable \"$name\" not present in this ResultSet.")
             }
         }
         return ret
     }
 
     // Queries
+    /** @Info: This function is no reasoning! Tested with protege.*/
     fun hasCharacteristicValuePositionMovement(): String {
-        return "SELECT ?Action " + // just return the ?Action variable; using * would return the ?Restriction and ?Value as well
+        return "SELECT * " + // just return the ?Action variable; using * would return the ?Restriction and ?Value as well
                 "WHERE { " +
                 "?Action rdfs:subClassOf :Action . " +
                 "?Action (owl:equivalentClass|^owl:equivalentClass)* ?Restriction . " + // because of possible symmetry. else: owl:equivalentClass
