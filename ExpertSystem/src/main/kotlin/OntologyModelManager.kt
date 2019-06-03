@@ -16,8 +16,7 @@ class OntologyModelManager(private val filename: String) {
         println("Model: $filename loaded!")
     }
 
-
-
+    // Functions
     fun showNumberOfStatementsFromActualModel(number: Int) {
         val iter = ontModel.listStatements()
 

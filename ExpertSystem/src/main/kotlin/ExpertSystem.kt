@@ -1,6 +1,5 @@
 //alltime todo: what is this warning?
 // // RDFDefaultErrorHandler - unknown-source: {W136} Relative URIs are not permitted in RDF: specifically <ont-policy.rdf>
-// todo: find out exactly what is the diff between Model and OntModel? What do we need when?
 
 fun main(args: Array<String>) {
     try {
@@ -23,10 +22,11 @@ fun main(args: Array<String>) {
             println("\n\n")
         }
 
+        // main
         val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
-        val results = queryMaster.executeModelQuery(queryMaster.hasCharacteristicValuePositionMovement(), "Action")
+        val results = queryMaster.executeModelSelectQuery(queryMaster.hasCharacteristicValuePositionMovement(), "Action")
 
-        println("RESULT::executeModelQuery() returned MutalbleList<Any>: \n" +
+        println("RESULT::executeModelSelectQuery() returned MutalbleList<Any>: \n" +
                 "$results")
 
     } catch (e: Exception) {
