@@ -85,9 +85,17 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "}"
     }
 
-    fun getThingInstances(): String {
-        return "SELECT ?Thing " +
-                "WHERE { ?Thing a/rdfs:subClassOf*  :Thing" +
+    fun getAllSubInstancesQuery(`class`: String): String {
+        return "SELECT ?$`class` " +
+                "WHERE { ?$`class` a/rdfs:subClassOf*  :$`class`" +
                 "}"
     }
+
+    fun eventsActedOnThingQuery(thing: String): String {
+        return "SELECT ?Event " +
+                "WHERE { ?Event a/rdfs:subClassOf* :Event . " +
+                "?Event :actedOnThing :$thing . " +
+                "}"
+    }
+
 }
