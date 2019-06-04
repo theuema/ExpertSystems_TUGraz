@@ -1,4 +1,4 @@
-class AutonomousRobot(private val filename: String) {
+class AutonomousRobot() {
     // Commands
     val commands = listOf(HelpCommand(this), ThingsCommand(this), StateCommand(this), ExitCommand(this))
     var shouldContinue = true
