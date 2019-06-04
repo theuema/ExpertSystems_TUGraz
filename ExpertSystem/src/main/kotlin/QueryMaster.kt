@@ -74,7 +74,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     }
 
     // new Queries
-    fun fromToPositionQuery(): String {
+    fun fromToPositionActionQuery(): String {
         return "SELECT ?Action " +
                 "WHERE { " +
                 "?Action rdfs:subClassOf* :Action . " +
@@ -82,6 +82,12 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "?RestrictionFrom owl:onProperty :fromPosition . " +
                 "?Action rdfs:subClassOf ?RestrictionTo . " +
                 "?RestrictionTo owl:onProperty :toPosition . " +
+                "}"
+    }
+
+    fun getThingInstances(): String {
+        return "SELECT ?thing " +
+                "WHERE { ?thing a/rdfs:subClassOf*  :Thing" +
                 "}"
     }
 }
