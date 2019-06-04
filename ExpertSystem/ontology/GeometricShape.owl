@@ -104,11 +104,19 @@
     
 
 
-    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#nextEvent -->
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#isNextEventOf -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#nextEvent">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#isNextEventOf">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#eventOrdering"/>
-        <owl:inverseOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#previousEvent"/>
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#isPreviousEventOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#isPreviousEventOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#isPreviousEventOf">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#eventOrdering"/>
     </owl:ObjectProperty>
     
 
@@ -142,14 +150,6 @@
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#preCondition">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#condition"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#previousEvent -->
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#previousEvent">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#eventOrdering"/>
     </owl:ObjectProperty>
     
 
@@ -554,8 +554,7 @@
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
-        <nextEvent rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos2ToPos3"/>
-        <previousEvent rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosPyr1"/>
+        <isPreviousEventOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos2ToPos3"/>
         <thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
         <toPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos2"/>
     </owl:NamedIndividual>
@@ -600,6 +599,7 @@
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosPyr1">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState"/>
         <fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
+        <isPreviousEventOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos1ToPos2"/>
         <thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
     </owl:NamedIndividual>
     
