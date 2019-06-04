@@ -28,8 +28,8 @@ fun main(args: Array<String>) {
         // main
         val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
 
-        // new query for fromToPositionQuery
-        val results = queryMaster.executeSelectQuery(queryMaster.fromToPositionQuery(), false)
+        // new query for fromToPositionActionQuery
+        val results = queryMaster.executeSelectQuery(queryMaster.fromToPositionActionQuery(), false)
         val resultsVariable = queryMaster.getVariableFromResultSet(results, "Action")
         println("RESULT::getVariableFromResultSet(results, \"Action\")" +
                 " returned MutalbleList<Any>: \n $resultsVariable")
