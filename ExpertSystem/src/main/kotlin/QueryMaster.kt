@@ -86,8 +86,8 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     }
 
     fun getThingInstances(): String {
-        return "SELECT ?thing " +
-                "WHERE { ?thing a/rdfs:subClassOf*  :Thing" +
+        return "SELECT ?Thing " +
+                "WHERE { ?Thing a/rdfs:subClassOf*  :Thing" +
                 "}"
     }
 }

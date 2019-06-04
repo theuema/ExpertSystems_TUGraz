@@ -22,6 +22,16 @@
     
 
 
+    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#actedOnThing -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#actedOnThing">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#condition -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#condition">
@@ -160,16 +170,6 @@
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PointInTime"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#thingActedOn -->
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#thingActedOn">
-        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Thing"/>
     </owl:ObjectProperty>
     
 
@@ -549,6 +549,7 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos1ToPos2">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingThingFromAToB"/>
+        <actedOnThing rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
         <fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
@@ -556,7 +557,6 @@
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
         <nextEvent rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos2ToPos3"/>
         <previousEvent rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosPyr1"/>
-        <thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
         <toPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos2"/>
     </owl:NamedIndividual>
     
@@ -566,12 +566,12 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos2ToPos3">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingThingFromAToB"/>
+        <actedOnThing rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
         <fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos2"/>
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
         <hasSubAction rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
-        <thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
         <toPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos3"/>
     </owl:NamedIndividual>
     
@@ -599,8 +599,8 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosPyr1">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState"/>
+        <actedOnThing rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
         <fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
-        <thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
     </owl:NamedIndividual>
     
 
@@ -609,8 +609,8 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosSph1">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState"/>
+        <actedOnThing rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#sphere1"/>
         <fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
-        <thingActedOn rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#sphere1"/>
     </owl:NamedIndividual>
     
 
