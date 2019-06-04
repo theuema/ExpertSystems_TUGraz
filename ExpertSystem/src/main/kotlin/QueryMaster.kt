@@ -15,7 +15,8 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         queryPrefix = buildQueryPrefix()
     }
 
-    // Functions
+    /** @Section: Functions */
+
     fun buildQueryPrefix(): String {
         return "PREFIX rdf: <$rdf> " +
                 "PREFIX rdfs: <$rdfs> " +
@@ -23,6 +24,8 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "PREFIX xsd: <$xsd> " +
                 "PREFIX : <$ontPrefix> "
     }
+
+    /** @Section: Generic Query Helpers */
 
     /** Takes a SPARQL SELECT-query-string, adds the OWL-prefixes and executes the query against a model.
      *  @param selectQueryString SELECT-query we want to execute w/o prefixes
@@ -53,15 +56,50 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
             when (obj.get(name)) {
                 is Resource -> ret.add(obj.getResource(name))
                 is Literal -> ret.add(obj.getLiteral(name))
-                else -> System.out.println("NULL SAFETY::getVariableFromResultSet(): " +
+                else -> System.out.println("QueryMaster::getVariableFromResultSet(): " +
                         "Variable \"$name\" not present in this ResultSet.")
             }
         }
         return ret
     }
 
-    // old Queries do not delete!
-    /** @Info: This function is no reasoning! Tested with protege.*/
+    fun classInstancesQueryS(`class`: String): String {
+        return "SELECT ?$`class` " +
+                "WHERE { ?$`class` a/rdfs:subClassOf*  :$`class`" +
+                "}"
+    }
+
+    /** @Section: Specific Queries */
+
+    fun actionFromToPositionQuery(): MutableList<Any> {
+        val s = "SELECT ?Action " +
+                "WHERE { " +
+                "?Action rdfs:subClassOf* :Action . " +
+                "?Action rdfs:subClassOf ?RestrictionFrom . " +
+                "?RestrictionFrom owl:onProperty :fromPosition . " +
+                "?Action rdfs:subClassOf ?RestrictionTo . " +
+                "?RestrictionTo owl:onProperty :toPosition . " +
+                "}"
+
+        return getVariableFromResultSet(executeSelectQuery(s, false), "Action")
+    }
+
+    fun thingInstancesQuery(): MutableList<Any> {
+        val s = classInstancesQueryS("Thing")
+        return getVariableFromResultSet(executeSelectQuery(s, false), "Thing")
+    }
+
+    fun eventsActedOnThingQuery(thing: String): MutableList<Any> {
+        val s = "SELECT ?Event " +
+                "WHERE { ?Event a/rdfs:subClassOf* :Event . " +
+                "?Event :actedOnThing :$thing . " +
+                "}"
+
+        return getVariableFromResultSet(executeSelectQuery(s, false), "Event")
+    }
+
+    /** @Section: old Queries do not delete! */
+
     fun hasCharacteristicValuePositionMovement(): String {
         return "SELECT * " + // just return the ?Action variable; using * would return the ?Restriction and ?Value as well
                 "WHERE { " +
@@ -72,30 +110,4 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "?Value owl:hasValue :positionMovement . " +
                 "}"
     }
-
-    // new Queries
-    fun fromToPositionActionQuery(): String {
-        return "SELECT ?Action " +
-                "WHERE { " +
-                "?Action rdfs:subClassOf* :Action . " +
-                "?Action rdfs:subClassOf ?RestrictionFrom . " +
-                "?RestrictionFrom owl:onProperty :fromPosition . " +
-                "?Action rdfs:subClassOf ?RestrictionTo . " +
-                "?RestrictionTo owl:onProperty :toPosition . " +
-                "}"
-    }
-
-    fun getAllSubInstancesQuery(`class`: String): String {
-        return "SELECT ?$`class` " +
-                "WHERE { ?$`class` a/rdfs:subClassOf*  :$`class`" +
-                "}"
-    }
-
-    fun eventsActedOnThingQuery(thing: String): String {
-        return "SELECT ?Event " +
-                "WHERE { ?Event a/rdfs:subClassOf* :Event . " +
-                "?Event :actedOnThing :$thing . " +
-                "}"
-    }
-
 }
