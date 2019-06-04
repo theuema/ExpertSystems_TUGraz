@@ -13,7 +13,7 @@ class OntologyModelManager(private val filename: String) {
         baseModel = FileManager.get().loadModel(filename)
         ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF, baseModel)
         //ontModel.read(filename)  // seems like it is not needed?
-        println("Model: $filename loaded!")
+        println("OntologyModelManager::$filename loaded!\n\n")
     }
 
     // Functions

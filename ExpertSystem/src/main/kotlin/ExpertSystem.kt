@@ -26,19 +26,37 @@ fun main(args: Array<String>) {
         }
 
         // main
-        val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
+        val q = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
 
-        // new query for fromToPositionActionQuery
-        val results = queryMaster.executeSelectQuery(queryMaster.fromToPositionActionQuery(), false)
-        val resultsVariable = queryMaster.getVariableFromResultSet(results, "Action")
-        println("RESULT::getVariableFromResultSet(results, \"Action\")" +
-                " returned MutalbleList<Any>: \n $resultsVariable")
-        resultsVariable.map {
-            if (it is Resource) println("Variable Resource: ${it.toString()}")
-            else if (it is Literal) println("Variable Literal: ${it.getDatatypeURI()}")
+        // actionFromToPositionQuery() Demo
+        println("__DEMO1::get our action from one position to the other position:")
+        val actions = q.actionFromToPositionQuery()
+        println("RESULT::actionFromToPositionQuery()" +
+                " returned MutableList<Any>: \n $actions")
+        actions.map {
+            if (it is Resource) println("RESOURCE::${it.toString()}")
+            else if (it is Literal) println("LITERAL::in solution: ${it.getDatatypeURI()}")
         }
+        println("\n\n")
+
+        println("__DEMO2::all instances from Thing and show what events acted on that _thing:")
+        // thingInstancesQuery() && eventsActedOnThingQueryS() Demo
+        val thingInstances = q.thingInstancesQuery()
+        val eventsActedOnThing: MutableList<MutableList<Any>> = mutableListOf()
+
+        thingInstances.map {
+            if (it is Resource) eventsActedOnThing.add(q.eventsActedOnThingQuery(it.localName))
+            if (it is Literal) println("LITERAL::in solution: ${it.getDatatypeURI()}")
+        }
+        println("RESULT::thingInstancesQuery() " +
+                "returned MutableList<Any>: \n $thingInstances")
+
+        println("RESULT::eventsActedOnThing() " +
+                "returned MutableList<Any>: \n $eventsActedOnThing \n\n")
+
+
     } catch (e: Exception) {
-        println("MAIN CATCH:: ${e.printStackTrace()}")
+        println("ExpertSystem:: ${e.printStackTrace()}")
     }
 
 }
