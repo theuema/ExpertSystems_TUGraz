@@ -4,6 +4,7 @@ class AutonomousRobot(private val filename: String) {
     fun run() {
         println("You can enter commands in order to ")
 
+        """
         do {
             val args = readLine()!!.split(' ')
 
@@ -15,6 +16,7 @@ class AutonomousRobot(private val filename: String) {
                 else -> println("Number too high")
             }
         } while (!cli.exit)
+        """
     }
 
     fun printHelp() {
