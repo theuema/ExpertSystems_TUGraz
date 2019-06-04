@@ -1,40 +1,39 @@
-class AutonomousRobot(private val filename: String) {
-    val commands = listOf(HelpCommand(), ThingsCommand(), StateCommand(), ExitCommand())
+class AutonomousRobot() {
+    // Commands
+    val commands = listOf(HelpCommand(this), ThingsCommand(this), StateCommand(this), ExitCommand(this))
+    var shouldContinue = true
+
+    // Ontology
+    val ontName = "GeometricShape"
+    val ontPrefix = "http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/" + ontName + "#"
+    val ontModelManager = OntologyModelManager("file:ontology/" + ontName + ".owl")
+
+    // Query Master
+    val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
 
     fun run() {
-        println("You can enter commands in order to ")
+        findAndExecuteCommand(listOf("help"))
 
-        """
-        do {
+        while(shouldContinue) {
             val args = readLine()!!.split(' ')
 
-            when(args[0]) {
-                "",  -> println("Invalid number")
-                1, 2 -> println("Number too low")
-                3 -> println("Number correct")
-                4 -> println("Number too high, but acceptable")
-                else -> println("Number too high")
-            }
-        } while (!cli.exit)
-        """
-    }
-
-    fun printHelp() {
-        println("You can enter commands which will be forwarded to the robot.")
-        println("The following commands can be used:")
-        for (cmd in commands) {
-            println("       ${cmd.usage} - ${cmd.description}")
+            if(!findAndExecuteCommand(args))
+                println("The command you entered was not found.")
         }
-        println("")
     }
 
-    fun getAllThings() : MutableList<String> {
-        // return all things as string list
-        return mutableListOf();
+    fun findAndExecuteCommand(args: List<String>) : Boolean {
+        for(arg in args)
+            arg.trim()
+        val typedCmdName = args[0]
+
+        for (cmd in commands) {
+            if(cmd.name.equals(typedCmdName)) {
+                cmd.executeCommand(args)
+                return true
+            }
+        }
+
+        return false
     }
-
-    fun getStateOfThing(thingName: String) {
-
-    }
-
 }
