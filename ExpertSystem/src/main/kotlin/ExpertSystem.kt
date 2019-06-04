@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
     try {
         // ontology definitions
         val ontName = "GeometricShape"
-        val ontPrefix = "http://www.semanticweb.org/thomashoedl/ontologies/2019/5/" + ontName + "#"
+        val ontPrefix = "http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/" + ontName + "#"
         val ontModelManager = OntologyModelManager("file:ontology/" + ontName + ".owl")
 
         // inspect model and/or test
