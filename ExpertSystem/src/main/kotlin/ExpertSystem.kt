@@ -54,6 +54,18 @@ fun main(args: Array<String>) {
         println("RESULT::eventsActedOnThing() " +
                 "returned MutableList<Any>: \n $eventsActedOnThing \n\n")
 
+        println("__DEMO3::get InitialState of ${(thingInstances[1] as Resource).localName}:")
+        // initialStateOfThingQuery() Demo
+        val initialState = q.initialStateOfThingQuery((thingInstances[1] as Resource).localName)
+        println("RESULT::initialStateOfThingQuery() " +
+                "returned ${initialState.javaClass.kotlin}>: \n ${initialState.localName} \n\n")
+
+        println("__DEMO4::get next Event from ${initialState.localName}:")
+        // eventNextfromEvent() Demo
+        val nextEvent = q.eventNextfromEvent(initialState.localName)
+                ?: throw Exception("QueryMaster::getOnlyObjectFromResultSet(): no nextEvent for ${initialState.localName} in ResultSet.")
+        println("RESULT::eventNextfromEvent() " +
+                "returned ${nextEvent.javaClass.kotlin}>: \n ${nextEvent.localName} \n\n")
 
     } catch (e: Exception) {
         println("ExpertSystem:: ${e.printStackTrace()}")

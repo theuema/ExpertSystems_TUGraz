@@ -63,6 +63,24 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         return ret
     }
 
+    fun getOnlyObjectFromResultSet(results: ResultSet, name: String): Resource? {
+        var ret: Resource? = null
+        val obj: QuerySolution
+
+        if(results.hasNext()) obj = results.next() else return ret
+
+        ret = when (obj.get(name)) {
+            is Resource -> obj.getResource(name)
+            is Literal -> throw Exception("QueryMaster::getOnlyObjectFromResultSet(): result for $name was Literal.")
+            else -> null
+        }
+
+        if(results.hasNext())
+            throw Exception("QueryMaster::getOnlyObjectFromResultSet(): more than one $name in ResultSet.")
+
+        return ret
+    }
+
     fun classInstancesQueryS(`class`: String): String {
         return "SELECT ?$`class` " +
                 "WHERE { ?$`class` a/rdfs:subClassOf*  :$`class`" +
@@ -96,6 +114,27 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "}"
 
         return getVariableFromResultSet(executeSelectQuery(s, false), "Event")
+    }
+
+    fun eventNextfromEvent(event: String): Resource? {
+        val s = "SELECT ?nextEvent " +
+                "WHERE { :${event} :isPreviousEventOf ?nextEvent .}"
+
+        return getOnlyObjectFromResultSet(executeSelectQuery(s, false), "nextEvent")
+    }
+
+    /** Takes the a it.localName String of an Instance of a Thing and returns the InitialState or null (if Literal)
+     *  @param thing a it.localName String of an Instance of a Thing we want to have the initalState Object
+     *  @return a Resource that is the initialState of the given Thing or null if it was a Literal
+     */
+    fun initialStateOfThingQuery(thing: String): Resource {
+        val s = "SELECT ?InitialState " +
+                "WHERE { ?InitialState a/rdfs:subClassOf* :InitialState . " +
+                "?InitialState :actedOnThing :$thing . " +
+                "}"
+
+        return getOnlyObjectFromResultSet(executeSelectQuery(s, false), "InitialState")
+                ?: throw Exception("QueryMaster::initialStateOfThingQuery(): no initialState of $thing found.")
     }
 
     /** @Section: old Queries do not delete! */
