@@ -86,6 +86,29 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         return ret
     }
 
+    private fun getTupleVariablesFromResultSet(results: ResultSet, name1: String, name2: String): MutableList<Pair<Resource, Resource>> {
+        val ret: MutableList<Pair<Resource, Resource>> = mutableListOf()
+
+        while (results.hasNext()) {
+            val obj = results.next()
+            val res1: Resource
+            val res2: Resource
+
+            when (obj.get(name1)) {
+                is Resource -> res1 = obj.getResource(name1)
+                is Literal -> throw Exception("QueryMaster::getVariableFromResultSet(): result for $name1 was Literal.")
+                else -> throw Exception("QueryMaster::getVariableFromResultSet(): no variable $name2 in actual QuerySolution.")
+            }
+            when (obj.get(name2)) {
+                is Resource -> res2 = obj.getResource(name2)
+                is Literal -> throw Exception("QueryMaster::getVariableFromResultSet(): result for $name2 was Literal.")
+                else -> throw Exception("QueryMaster::getVariableFromResultSet(): no variable $name2 in actual QuerySolution.")
+            }
+            ret.add(Pair(res1, res2))
+        }
+        return ret
+    }
+
     private fun classInstancesQueryS(`class`: String): String {
         return "SELECT ?$`class` " +
                 "WHERE { ?$`class` a/rdfs:subClassOf*  :$`class`" +
@@ -137,8 +160,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         var tmpClass = getClassOfThingQuery(thing)[0]
         thingClasses.add(tmpClass.localName)
 
-        while(true)
-        {
+        while (true) {
             val tmpList = getNextSuperclassQuery(tmpClass.localName)
             if (tmpList.isEmpty()) break
             tmpClass = tmpList[0]
@@ -150,7 +172,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
 
     fun getNextSuperclassQuery(subclass: String): MutableList<Resource> {
         val query = "SELECT ?Superclass " +
-                    "WHERE { :$subclass rdfs:subClassOf ?Superclass}"
+                "WHERE { :$subclass rdfs:subClassOf ?Superclass}"
 
         return getVariableFromResultSet(executeSelectQuery(query, false), "Superclass")
     }
@@ -171,6 +193,15 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "}"
 
         return getVariableFromResultSet(executeSelectQuery(s, false), "Event")
+    }
+
+    fun postConditionOfActionQuery(action: String): MutableList<Pair<Resource, Resource>> {
+        val s = "SELECT ?Condition ?Post " +
+                "WHERE { 	?Condition rdfs:subPropertyOf :postCondition . " +
+                ":$action ?Condition  ?Post . " +
+                "}"
+
+        return getTupleVariablesFromResultSet(executeSelectQuery(s, false), "Condition", "Post")
     }
 
     fun resolveAvailableActionsOnThing(thing: String): MutableList<Resource> {
