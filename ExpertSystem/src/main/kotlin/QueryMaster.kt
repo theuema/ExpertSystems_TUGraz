@@ -89,6 +89,40 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         return getVariableFromResultSet(executeSelectQuery(s, false), "Thing")
     }
 
+    // TODO change when can have more classes
+    fun getSuperclassesOfThing(thing: String): MutableList<String> {
+        val thingClasses: MutableList<String> = mutableListOf<String>()
+
+        var tmpClass = getClassOfThingQuery(thing).get(0) as Resource
+        thingClasses.add(tmpClass.localName)
+
+        while(true)
+        {
+            val tmpList = getNextSuperclassQuery(tmpClass.localName)
+            if (tmpList.isEmpty()) break;
+            tmpClass = tmpList.get(0) as Resource
+            thingClasses.add(tmpClass.localName)
+        }
+
+        return thingClasses
+    }
+
+    fun getNextSuperclassQuery(subclass: String): MutableList<Any> {
+        val query = "SELECT ?Superclass " +
+                    "WHERE { :$subclass rdfs:subClassOf ?Superclass}"
+
+        return getVariableFromResultSet(executeSelectQuery(query, false), "Superclass")
+    }
+
+    fun getClassOfThingQuery(thing: String): MutableList<Any> {
+        val query = "SELECT ?Class " +
+                "WHERE { :$thing a ?Class . " +
+                "FILTER (strstarts(str(?Class), \"$ontPrefix\"))" +
+                "}"
+
+        return getVariableFromResultSet(executeSelectQuery(query, false), "Class")
+    }
+
     fun eventsActedOnThingQuery(thing: String): MutableList<Any> {
         val s = "SELECT ?Event " +
                 "WHERE { ?Event a/rdfs:subClassOf* :Event . " +

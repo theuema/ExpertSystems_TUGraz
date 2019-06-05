@@ -30,8 +30,18 @@ class ThingsCommand(val tmpRobot: AutonomousRobot) : RobotCommand("things", "thi
 
         println("The following things are within the kitchen:")
         thingInstances.map {
-            if(it is Resource) println(it.localName)
-            else println("NOT KNOWN - TAKE A LOOK")
+            if(it is Resource) {
+                val classList = robot.queryMaster.getSuperclassesOfThing(it.localName)
+                print(it.localName + ": ")
+                for (class_index in 0..(classList.size-1)) {
+                    print(classList.get(class_index))
+                    if(class_index != classList.size-1) print(", ")
+                }
+                println("")
+            }
+            else {
+                throw Exception("Should not end up here!!")
+            }
         }
 
         println("")
