@@ -1,4 +1,3 @@
-import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.Resource
 
 //alltime todo: what is this warning?
@@ -37,7 +36,7 @@ fun main(args: Array<String>) {
         println("__DEMO1::get our action from one position to the other position:")
         val action = q.actionFromToPositionQuery()
                 ?: throw Exception("ExpertSystem::actionFromToPositionQuery(): no specific action for " +
-                        "owl:onProperty :from/toPosition defined or multiple actions in ontology.")
+                        "owl:onProperty :from/toPosition defined in ontology.")
         println("RESULT::actionFromToPositionQuery() " +
                 "returned ${action.javaClass}>: \n ${action.localName} \n\n")
 
@@ -56,20 +55,32 @@ fun main(args: Array<String>) {
                 "returned MutableList<Any>: \n $eventsActedOnThing \n\n")
 
         /** @DEMO3: initialStateOfThingQuery() */
-        println("__DEMO3::get InitialState of ${thingInstances[1].localName}:")
+        println("__DEMO3::get InitialState for ${thingInstances[1].localName}:")
         val initialState = q.initialStateOfThingQuery(thingInstances[1].localName)
-                ?: throw Exception("ExpertSystem::initialStateOfThingQuery(): " +
-                        "either multiple or no initialState of ${thingInstances[1].localName} found.")
+                ?: throw Exception("ExpertSystem::initialStateOfThingQuery(): no initialState for ${thingInstances[1].localName} found.")
 
         println("RESULT::initialStateOfThingQuery() " +
                 "returned ${initialState.javaClass}>: \n ${initialState.localName} \n\n")
 
         /** @DEMO4: eventNextfromEvent() */
-        println("__DEMO4::get next Event of ${initialState.localName}:")
+        println("__DEMO4::get next Action for ${initialState.localName}:")
         val nextEvent = q.eventNextfromEvent(initialState.localName)
-                ?: throw Exception("ExpertSystem::eventNextfromEvent(): either multiple or no nextEvent of ${initialState.localName} found.")
+                ?: throw Exception("ExpertSystem::eventNextfromEvent(): no nextEvent for ${initialState.localName} found.")
         println("RESULT::eventNextfromEvent() " +
                 "returned ${nextEvent.javaClass}>: \n ${nextEvent.localName} \n\n")
+
+
+        /** @DEMO5: resolveAvailableActionsOnThing() */
+        println("__DEMO5::get chain of available Actions beginning from InitialState for Thing Individual: ${thingInstances[1].localName}:")
+        val actionsAvailableForThing = q.resolveAvailableActionsOnThing((thingInstances[1].localName))
+        println("RESULT::actionsAvailableForThing() " +
+                "returned MutableList<Resource>: \n $actionsAvailableForThing \n\n")
+
+        /** @DEMO6: resolveAvailableActionsFromAction() */
+        println("__DEMO6::get chain of available 'next' Actions for Action: ${eventsActedOnThing[1][2].localName}:")
+        val actionsAvailableAfterAction = q.resolveAvailableActionsFromAction((eventsActedOnThing[1][2]))
+        println("RESULT::actionsAvailableForThing() " +
+                "returned MutableList<Resource>: \n $actionsAvailableAfterAction \n\n")
 
     } catch (e: Exception) {
         println("ExpertSystem:: ${e.printStackTrace()}")
