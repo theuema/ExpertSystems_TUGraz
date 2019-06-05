@@ -280,11 +280,8 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                     ":${orderingRes.localName} :happensBeforeInOrdering ?ActionBefore.\n" +
                     ":${orderingRes.localName} :happensAfterInOrdering ?ActionAfter.\n" +
                     "}"
-            println(beforeAfterActionsQuery)
-            val tmpResult = executeSelectQuery(beforeAfterActionsQuery, false)
-            val actionBefore = getVariableFromResultSet(tmpResult, "ActionBefore")
-            val actionAfter = getVariableFromResultSet(tmpResult, "ActionAfter")
-            tupleOrderings.add(Pair(actionBefore.get(0).localName, actionAfter.get(0).localName))
+            val actionBeforeAfterTuple = getTupleVariablesFromResultSet(executeSelectQuery(beforeAfterActionsQuery, false), "ActionBefore", "ActionAfter")
+            tupleOrderings.add(Pair(actionBeforeAfterTuple.get(0).first.localName, actionBeforeAfterTuple.get(0).second.localName))
         }
 
         // put tupleOrderings in the right order and put it into orderedSubActions
@@ -304,6 +301,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                     lastActionName = tuple.second
                     tupleOrderings.remove(tuple)
                     found = true
+                    break
                 }
             }
         }
@@ -320,6 +318,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                     firstActionName = tuple.first
                     tupleOrderings.remove(tuple)
                     found = true
+                    break
                 }
             }
         }
