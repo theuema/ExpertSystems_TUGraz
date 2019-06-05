@@ -4,10 +4,8 @@ import org.apache.jena.rdf.model.Resource
 // // RDFDefaultErrorHandler - unknown-source: {W136} Relative URIs are not permitted in RDF: specifically <ont-policy.rdf>
 
 fun main(args: Array<String>) {
-    """
     val robot = AutonomousRobot()
     robot.run()
-    """
 
     try {
         // ontology definitions
