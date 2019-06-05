@@ -1,6 +1,7 @@
 class AutonomousRobot() {
     // Commands
-    val commands = listOf(HelpCommand(this), ThingsCommand(this), StateCommand(this), ExitCommand(this))
+    val commands = listOf(HelpCommand(this), ThingsCommand(this), StateCommand(this), ExitCommand(this),
+            PuttingThingToDifferentPlaceCommand(this))
     var shouldContinue = true
 
     // Ontology
@@ -15,6 +16,7 @@ class AutonomousRobot() {
         findAndExecuteCommand(listOf("help"))
 
         while(shouldContinue) {
+            print("robi: ")
             val args = readLine()!!.split(' ')
 
             if(!findAndExecuteCommand(args))

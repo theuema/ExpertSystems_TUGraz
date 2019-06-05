@@ -48,16 +48,25 @@ class ThingsCommand(val tmpRobot: AutonomousRobot) : RobotCommand("things", "thi
     }
 }
 
-class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : RobotCommand("put","put thing pos2", "the robot puts the chosen thing from its current position to pos2", tmpRobot) {
+class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : RobotCommand("put","put thing pos", "the robot puts the chosen thing from its current position to pos2", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         if(args.size != 3) {
             println("Need at least two arguments!")
             return
         }
 
+        val relocationAction = robot.queryMaster.actionFromToPositionQuery() ?: throw java.lang.Exception("Should not be null")
+        val taskDescription = robot.queryMaster.getTaskDescription(relocationAction.localName)
+
+        for(task in taskDescription) {
+            println(task)
+        }
+
+        // TODO for each task in task description a "function" - just says that it is carried out
+
         // TODO
         // get current position of thing - if thing exists
-        // get pos2 - if exists
+        // get pos - if exists
         // get task description for putting something somewhere
         // carry out task with task description
         // add tasks to ontology as individuals

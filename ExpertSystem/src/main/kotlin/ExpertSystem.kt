@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
         val ontModelManager = OntologyModelManager("file:ontology/" + ontName + ".owl")
 
         // inspect model and/or test
-        if (false) {
+        if (true) {
             ontModelManager.showNumberOfStatementsFromActualModel(20)
             val actionClass = ontModelManager.ontModel.getOntClass(ontPrefix + "Action")
             println("RESULT::getOntClass() returned $actionClass \n\n")
