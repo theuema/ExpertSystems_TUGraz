@@ -92,7 +92,13 @@ fun main(args: Array<String>) {
                 println("property: ${prop.`object`.toString()}")
             }
         }
+        println("\n\n")
 
+        /** @DEMO8: Get Post Conditions for an action  */
+        println("__DEMO8::Get Post Condition for ${nextEvent.localName}.")
+        val postConditionTuple = q.postConditionOfActionQuery(nextEvent.localName)
+        println("RESULT::postConditionOfActionQuery() " +
+                "returned MutableList<Pair(Resource, Resource)>: \n $postConditionTuple \n\n")
 
     } catch (e: Exception) {
         println("ExpertSystem:: ${e.printStackTrace()}")
