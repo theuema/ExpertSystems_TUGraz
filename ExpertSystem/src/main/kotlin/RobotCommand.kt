@@ -48,9 +48,25 @@ class ThingsCommand(val tmpRobot: AutonomousRobot) : RobotCommand("things", "thi
     }
 }
 
+class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : RobotCommand("put","put thing pos2", "the robot puts the chosen thing from its current position to pos2", tmpRobot) {
+    override fun executeCommand(args: List<String>) {
+        if(args.size != 3) {
+            println("Need at least two arguments!")
+            return
+        }
+
+        // TODO
+        // get current position of thing - if thing exists
+        // get pos2 - if exists
+        // get task description for putting something somewhere
+        // carry out task with task description
+        // add tasks to ontology as individuals
+    }
+}
+
 class StateCommand(val tmpRobot: AutonomousRobot) : RobotCommand("state","state thing_name", "shows the state of the thing with the specified name", tmpRobot) {
     override fun executeCommand(args: List<String>) {
-
+        // TODO
     }
 }
 
