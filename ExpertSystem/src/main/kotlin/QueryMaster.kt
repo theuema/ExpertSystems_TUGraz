@@ -17,7 +17,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
 
     /** @Section: Functions */
 
-    fun buildQueryPrefix(): String {
+    private fun buildQueryPrefix(): String {
         return "PREFIX rdf: <$rdf> " +
                 "PREFIX rdfs: <$rdfs> " +
                 "PREFIX owl: <$owl> " +
@@ -25,14 +25,14 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "PREFIX : <$ontPrefix> "
     }
 
-    /** @Section: Generic Query Helpers */
+    /** @Section: Private Generic Query Helpers */
 
     /** Takes a SPARQL SELECT-query-string, adds the OWL-prefixes and executes the query against a model.
      *  @param selectQueryString SELECT-query we want to execute w/o prefixes
      *  @param useOntModel specifies if we need reasoning or not
      *  @return copy of the resulting ResultSet object
      */
-    fun executeSelectQuery(selectQueryString: String, useOntModel: Boolean): ResultSet {
+    private fun executeSelectQuery(selectQueryString: String, useOntModel: Boolean): ResultSet {
         val m = if (useOntModel) ontModel else model
         val query = QueryFactory.create(queryPrefix + selectQueryString)
 
@@ -43,35 +43,76 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         }
     }
 
-    /** Takes a ResultSet and a variable name to generate a list of objects matching that name in the given query(-solution)
+    /** Takes a ResultSet and a variable 'name' to generate a list of objects matching that name in the given ResultSet (QuerySolution)
      *  @param results is the outcome of a previous query as ResultSet (containing multiple QuerySolution objects)
      *  @param name of the variable we are looking for (e.g.: the "Action" we need to do next..)
      *  @return List of values of the specific variable, contained in the ResultSet
      */
-    fun getVariableFromResultSet(results: ResultSet, name: String): MutableList<Any> {
-        val ret: MutableList<Any> = mutableListOf()
+    private fun getVariableFromResultSet(results: ResultSet, name: String): MutableList<Resource> {
+        val ret: MutableList<Resource> = mutableListOf()
 
         while (results.hasNext()) {
             val obj = results.next()
             when (obj.get(name)) {
                 is Resource -> ret.add(obj.getResource(name))
-                is Literal -> ret.add(obj.getLiteral(name))
-                else -> System.out.println("QueryMaster::getVariableFromResultSet(): " +
-                        "Variable \"$name\" not present in this ResultSet.")
+                is Literal -> throw Exception("QueryMaster::getVariableFromResultSet(): result for $name was Literal.")
+            // maybe we need to change else -> to optional: ret.add(null)
+            // if we need to check for other object we actually don't want or just 'continue' if we find other objects..
+                else -> throw Exception("QueryMaster::getVariableFromResultSet(): no variable $name in actual QuerySolution.")
             }
         }
         return ret
     }
 
-    fun classInstancesQueryS(`class`: String): String {
+    /** Takes a ResultSet and a variable 'name' to return the Resource if it is present & the only Resource or
+     *  null if 'name' is not found in the ResultSet. Does not allow Literals.
+     *  @param results is the outcome of a previous query as ResultSet (containing just 1 QuerySolution object)
+     *  @param name of the variable we are looking for (e.g.: the "initialState" of an GeometricShape..)
+     *  @return Resource if found & the only one, null if 'name' not present in the ResultSet or there are multiple QuerySolutions
+     */
+    private fun getOnlyObjectVariableFromResultSet(results: ResultSet, name: String): Resource? {
+        val obj: QuerySolution
+        if (results.hasNext()) obj = results.next() else return null
+
+        val ret = when (obj.get(name)) {
+            is Resource -> obj.getResource(name)
+            is Literal -> throw Exception("QueryMaster::getOnlyObjectVariableFromResultSet(): result for $name was Literal.")
+            else -> null
+        }
+
+        if (results.hasNext())
+            return null
+
+        return ret
+    }
+
+    private fun classInstancesQueryS(`class`: String): String {
         return "SELECT ?$`class` " +
                 "WHERE { ?$`class` a/rdfs:subClassOf*  :$`class`" +
                 "}"
     }
 
-    /** @Section: Specific Queries */
+    /** @Section: Public Specific Queries */
 
-    fun actionFromToPositionQuery(): MutableList<Any> {
+    // written with optional Resource? return value,
+    // because we maybe need to check in ExpertSystem.kt if we even find such an object!?
+    fun initialStateOfThingQuery(thing: String): Resource? {
+        val s = "SELECT ?InitialState " +
+                "WHERE { ?InitialState a/rdfs:subClassOf* :InitialState . " +
+                "?InitialState :actedOnThing :$thing . " +
+                "}"
+
+        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "InitialState")
+    }
+
+    fun eventNextfromEvent(event: String): Resource? {
+        val s = "SELECT ?nextEvent " +
+                "WHERE { :${event} :isPreviousEventOf ?nextEvent .}"
+
+        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "nextEvent")
+    }
+
+    fun actionFromToPositionQuery(): Resource? {
         val s = "SELECT ?Action " +
                 "WHERE { " +
                 "?Action rdfs:subClassOf* :Action . " +
@@ -81,10 +122,10 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "?RestrictionTo owl:onProperty :toPosition . " +
                 "}"
 
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Action")
+        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "Action")
     }
 
-    fun thingInstancesQuery(): MutableList<Any> {
+    fun thingInstancesQuery(): MutableList<Resource> {
         val s = classInstancesQueryS("Thing")
         return getVariableFromResultSet(executeSelectQuery(s, false), "Thing")
     }
@@ -107,14 +148,14 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         return thingClasses
     }
 
-    fun getNextSuperclassQuery(subclass: String): MutableList<Any> {
+    fun getNextSuperclassQuery(subclass: String): MutableList<Resource> {
         val query = "SELECT ?Superclass " +
                     "WHERE { :$subclass rdfs:subClassOf ?Superclass}"
 
         return getVariableFromResultSet(executeSelectQuery(query, false), "Superclass")
     }
 
-    fun getClassOfThingQuery(thing: String): MutableList<Any> {
+    fun getClassOfThingQuery(thing: String): MutableList<Resource> {
         val query = "SELECT ?Class " +
                 "WHERE { :$thing a ?Class . " +
                 "FILTER (strstarts(str(?Class), \"$ontPrefix\"))" +
@@ -123,7 +164,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         return getVariableFromResultSet(executeSelectQuery(query, false), "Class")
     }
 
-    fun eventsActedOnThingQuery(thing: String): MutableList<Any> {
+    fun eventsActedOnThingQuery(thing: String): MutableList<Resource> {
         val s = "SELECT ?Event " +
                 "WHERE { ?Event a/rdfs:subClassOf* :Event . " +
                 "?Event :actedOnThing :$thing . " +
