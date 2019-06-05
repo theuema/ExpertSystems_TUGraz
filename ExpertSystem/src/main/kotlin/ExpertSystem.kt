@@ -83,11 +83,11 @@ fun main(args: Array<String>) {
         /** @DEMO7: Print properties from an individual */
         println("__DEMO7::Print properties from following individuals.")
         println("Individuals are: $actionsAvailableForThing")
-        actionsAvailableForThing.map{
+        actionsAvailableForThing.map {
             println("--> properties of individual ${it.localName} :")
 
             val stmt = it.listProperties()
-            while(stmt.hasNext()){
+            while (stmt.hasNext()) {
                 val prop = stmt.next()
                 println("property: ${prop.`object`.toString()}")
             }

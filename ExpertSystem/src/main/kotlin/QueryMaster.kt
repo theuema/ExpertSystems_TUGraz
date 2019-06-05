@@ -244,21 +244,25 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
 
     // gets the task description of a composed action in the right order
     fun getTaskDescription(composedActionName: String): MutableList<String> {
-        val subActionsQuery = "SELECT ?SubActions\n" +
-                "WHERE { \n" +
-                ":$composedActionName rdfs:subClassOf/owl:onProperty :hasSubAction.\n" +
-                ":$composedActionName rdfs:subClassOf/owl:onClass ?SubActions.\n" +
+        val selectSubActions = "SELECT ?SubActions " +
+                "WHERE { " +
+                ":$composedActionName rdfs:subClassOf* :Action . " +
+                ":$composedActionName rdfs:subClassOf* ?Restriction . " +
+                "?Restriction owl:onProperty :hasSubAction . " +
+                "?Restriction owl:onClass ?SubActions . " +
                 "}"
-        val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsQuery, false), "SubActions")
+        val subActionResources = getVariableFromResultSet(executeSelectQuery(selectSubActions, false), "SubActions")
 
-        val actionOrderingsQuery = "SELECT ?Orderings\n" +
-                "WHERE { \n" +
-                ":PuttingThingFromAToB rdfs:subClassOf/owl:onProperty :orderingConstraints.\n" +
-                ":PuttingThingFromAToB rdfs:subClassOf/owl:hasValue ?Orderings.\n" +
+        val selectOrderings = "SELECT ?Orderings " +
+                "WHERE { " +
+                ":$composedActionName rdfs:subClassOf* :Action . " +
+                ":$composedActionName rdfs:subClassOf* ?Restriction . " +
+                "?Restriction owl:onProperty :orderingConstraints . " +
+                "?Restriction owl:hasValue ?Orderings . " +
                 "}"
-        val orderingResources = getVariableFromResultSet(executeSelectQuery(actionOrderingsQuery, false), "Orderings")
+        val orderingResources = getVariableFromResultSet(executeSelectQuery(selectOrderings, false), "Orderings")
+
         val orderedActions = mergeOrderings(orderingResources)
-
         if (orderedActions.size != subActionResources.size) throw Exception("The sizes of orderedActions and subActionResources are not equal: orderedActions.size: ${orderedActions.size}, subActionResources.size: ${subActionResources.size}. Check Ontology!")
 
         // check if the orderedActions contains all actions that where specified within the class as subActions
@@ -270,8 +274,8 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     }
 
     fun mergeOrderings(orderingResources: MutableList<Resource>): MutableList<String> {
-        val orderedSubActions : MutableList<String> = mutableListOf<String>()
-        val tupleOrderings : MutableList<Pair<String, String>> = mutableListOf<Pair<String, String>>()
+        val orderedSubActions: MutableList<String> = mutableListOf<String>()
+        val tupleOrderings: MutableList<Pair<String, String>> = mutableListOf<Pair<String, String>>()
 
         // get all ordering tuples from ontology to tupleOrderings
         for (orderingRes in orderingResources) {
@@ -281,22 +285,22 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                     ":${orderingRes.localName} :happensAfterInOrdering ?ActionAfter.\n" +
                     "}"
             val actionBeforeAfterTuple = getTupleVariablesFromResultSet(executeSelectQuery(beforeAfterActionsQuery, false), "ActionBefore", "ActionAfter")
-            tupleOrderings.add(Pair(actionBeforeAfterTuple.get(0).first.localName, actionBeforeAfterTuple.get(0).second.localName))
+            tupleOrderings.add(Pair(actionBeforeAfterTuple[0].first.localName, actionBeforeAfterTuple[0].second.localName))
         }
 
         // put tupleOrderings in the right order and put it into orderedSubActions
-        orderedSubActions.add(tupleOrderings.get(0).first)
-        orderedSubActions.add(tupleOrderings.get(0).second)
+        orderedSubActions.add(tupleOrderings[0].first)
+        orderedSubActions.add(tupleOrderings[0].second)
         tupleOrderings.removeAt(0)
 
         // add actions that come after the current within the tuple
-        var lastActionName = orderedSubActions.get(1)
+        var lastActionName = orderedSubActions[1]
         var found = true
 
-        while(found) {
+        while (found) {
             found = false
             for (tuple in tupleOrderings) {
-                if(tuple.first.equals(lastActionName)) {
+                if (tuple.first.equals(lastActionName)) {
                     orderedSubActions.add(tuple.second)
                     lastActionName = tuple.second
                     tupleOrderings.remove(tuple)
@@ -310,10 +314,10 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         var firstActionName = orderedSubActions.get(0)
         found = true
 
-        while(found) {
+        while (found) {
             found = false
             for (tuple in tupleOrderings) {
-                if(tuple.second.equals(firstActionName)) {
+                if (tuple.second.equals(firstActionName)) {
                     orderedSubActions.add(tuple.first)
                     firstActionName = tuple.first
                     tupleOrderings.remove(tuple)

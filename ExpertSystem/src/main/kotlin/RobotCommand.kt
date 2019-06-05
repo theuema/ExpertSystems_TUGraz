@@ -8,7 +8,7 @@ abstract class RobotCommand(val name: String,
     abstract fun executeCommand(args: List<String>)
 }
 
-class HelpCommand(val tmpRobot: AutonomousRobot) : RobotCommand("help","help", "show this description", tmpRobot) {
+class HelpCommand(val tmpRobot: AutonomousRobot) : RobotCommand("help", "help", "show this description", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         println("You can enter commands which will be forwarded to the robot.")
         println("The following commands can be used:")
@@ -19,9 +19,9 @@ class HelpCommand(val tmpRobot: AutonomousRobot) : RobotCommand("help","help", "
     }
 }
 
-class ThingsCommand(val tmpRobot: AutonomousRobot) : RobotCommand("things", "things","show all things", tmpRobot) {
+class ThingsCommand(val tmpRobot: AutonomousRobot) : RobotCommand("things", "things", "show all things", tmpRobot) {
     override fun executeCommand(args: List<String>) {
-        if(args.size != 1) {
+        if (args.size != 1) {
             println("No further arguments are expected here!")
             return
         }
@@ -30,16 +30,15 @@ class ThingsCommand(val tmpRobot: AutonomousRobot) : RobotCommand("things", "thi
 
         println("The following things are within the kitchen:")
         thingInstances.map {
-            if(it is Resource) {
+            if (it is Resource) {
                 val classList = robot.queryMaster.getSuperclassesOfThing(it.localName)
                 print(it.localName + ": ")
-                for (class_index in 0..(classList.size-1)) {
+                for (class_index in 0..(classList.size - 1)) {
                     print(classList.get(class_index))
-                    if(class_index != classList.size-1) print(", ")
+                    if (class_index != classList.size - 1) print(", ")
                 }
                 println("")
-            }
-            else {
+            } else {
                 throw Exception("Should not end up here!!")
             }
         }
@@ -48,19 +47,21 @@ class ThingsCommand(val tmpRobot: AutonomousRobot) : RobotCommand("things", "thi
     }
 }
 
-class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : RobotCommand("put","put thing pos", "the robot puts the chosen thing from its current position to pos2", tmpRobot) {
+class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : RobotCommand("put", "put thing pos", "the robot puts the chosen thing from its current position to pos2", tmpRobot) {
     override fun executeCommand(args: List<String>) {
-        if(args.size != 3) {
+        if (args.size != 3) {
             println("Need at least two arguments!")
             return
         }
 
-        val relocationAction = robot.queryMaster.actionFromToPositionQuery() ?: throw java.lang.Exception("Should not be null")
+        val relocationAction = robot.queryMaster.actionFromToPositionQuery()
+                ?: throw java.lang.Exception("Should not be null")
         val taskDescription = robot.queryMaster.getTaskDescription(relocationAction.localName)
 
-        for(task in taskDescription) {
+        for (task in taskDescription) {
             println(task)
         }
+        println("")
 
         // TODO for each task in task description a "function" - just says that it is carried out
 
@@ -73,7 +74,7 @@ class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : Robot
     }
 }
 
-class StateCommand(val tmpRobot: AutonomousRobot) : RobotCommand("state","state thing_name", "shows the state of the thing with the specified name", tmpRobot) {
+class StateCommand(val tmpRobot: AutonomousRobot) : RobotCommand("state", "state thing_name", "shows the state of the thing with the specified name", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         // TODO
     }

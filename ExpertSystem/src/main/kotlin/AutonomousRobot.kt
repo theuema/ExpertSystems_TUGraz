@@ -15,22 +15,22 @@ class AutonomousRobot() {
     fun run() {
         findAndExecuteCommand(listOf("help"))
 
-        while(shouldContinue) {
-            print("robi: ")
+        while (shouldContinue) {
+            print("~\$Robi : ")
             val args = readLine()!!.split(' ')
 
-            if(!findAndExecuteCommand(args))
+            if (!findAndExecuteCommand(args))
                 println("The command you entered was not found.")
         }
     }
 
-    fun findAndExecuteCommand(args: List<String>) : Boolean {
-        for(arg in args)
+    fun findAndExecuteCommand(args: List<String>): Boolean {
+        for (arg in args)
             arg.trim()
         val typedCmdName = args[0]
 
         for (cmd in commands) {
-            if(cmd.name.equals(typedCmdName)) {
+            if (cmd.name.equals(typedCmdName)) {
                 cmd.executeCommand(args)
                 return true
             }
