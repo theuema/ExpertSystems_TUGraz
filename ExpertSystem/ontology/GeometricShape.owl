@@ -599,8 +599,8 @@
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosPyr1">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState"/>
         <actedOnThing rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pyramid1"/>
-        <fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
         <isPreviousEventOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PuttingPyramidFromPos1ToPos2"/>
+        <toPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
     </owl:NamedIndividual>
     
 
@@ -610,7 +610,7 @@
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#initialPosSph1">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState"/>
         <actedOnThing rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#sphere1"/>
-        <fromPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
+        <toPosition rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#pos1"/>
     </owl:NamedIndividual>
     
 
