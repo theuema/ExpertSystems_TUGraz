@@ -132,16 +132,16 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
 
     // TODO change when can have more classes
     fun getSuperclassesOfThing(thing: String): MutableList<String> {
-        val thingClasses: MutableList<String> = mutableListOf<String>()
+        val thingClasses: MutableList<String> = mutableListOf()
 
-        var tmpClass = getClassOfThingQuery(thing).get(0) as Resource
+        var tmpClass = getClassOfThingQuery(thing)[0]
         thingClasses.add(tmpClass.localName)
 
         while(true)
         {
             val tmpList = getNextSuperclassQuery(tmpClass.localName)
-            if (tmpList.isEmpty()) break;
-            tmpClass = tmpList.get(0) as Resource
+            if (tmpList.isEmpty()) break
+            tmpClass = tmpList[0]
             thingClasses.add(tmpClass.localName)
         }
 
