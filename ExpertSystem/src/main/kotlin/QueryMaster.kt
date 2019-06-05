@@ -68,7 +68,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
      *  null if 'name' is not found in the ResultSet. Does not allow Literals.
      *  @param results is the outcome of a previous query as ResultSet (containing just 1 QuerySolution object)
      *  @param name of the variable we are looking for (e.g.: the "initialState" of an GeometricShape..)
-     *  @return Resource if found & the only one, null if 'name' not present in the ResultSet or there are multiple QuerySolutions
+     *  @return Resource if the only solution returned by the SPARQL-Query, null if we don't got a QuerySolution
      */
     private fun getOnlyObjectVariableFromResultSet(results: ResultSet, name: String): Resource? {
         val obj: QuerySolution
@@ -81,7 +81,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         }
 
         if (results.hasNext())
-            return null
+            throw Exception("QueryMaster::getOnlyObjectVariableFromResultSet(): variable $name returned more than one solution.")
 
         return ret
     }
@@ -95,7 +95,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     /** @Section: Public Specific Queries */
 
     // written with optional Resource? return value,
-    // because we maybe need to check in ExpertSystem.kt if we even find such an object!?
+    // because we maybe need to check if we even find such an object!?
     fun initialStateOfThingQuery(thing: String): Resource? {
         val s = "SELECT ?InitialState " +
                 "WHERE { ?InitialState a/rdfs:subClassOf* :InitialState . " +
@@ -132,16 +132,16 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
 
     // TODO change when can have more classes
     fun getSuperclassesOfThing(thing: String): MutableList<String> {
-        val thingClasses: MutableList<String> = mutableListOf<String>()
+        val thingClasses: MutableList<String> = mutableListOf()
 
-        var tmpClass = getClassOfThingQuery(thing).get(0) as Resource
+        var tmpClass = getClassOfThingQuery(thing)[0]
         thingClasses.add(tmpClass.localName)
 
         while(true)
         {
             val tmpList = getNextSuperclassQuery(tmpClass.localName)
-            if (tmpList.isEmpty()) break;
-            tmpClass = tmpList.get(0) as Resource
+            if (tmpList.isEmpty()) break
+            tmpClass = tmpList[0]
             thingClasses.add(tmpClass.localName)
         }
 
@@ -171,6 +171,31 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "}"
 
         return getVariableFromResultSet(executeSelectQuery(s, false), "Event")
+    }
+
+    fun resolveAvailableActionsOnThing(thing: String): MutableList<Resource> {
+        val ret: MutableList<Resource> = mutableListOf()
+
+        val initialState = initialStateOfThingQuery(thing)
+                ?: throw Exception("QueryMaster::resolveAvailableActionsOnThing(): no initialState for $thing found.")
+
+        ret.add(initialState)
+        while (eventNextfromEvent(ret.last().localName) != null) {
+            ret.add(eventNextfromEvent(ret.last().localName)!!)
+        }
+
+        return ret
+    }
+
+    fun resolveAvailableActionsFromAction(action: Resource): MutableList<Resource> {
+        val ret: MutableList<Resource> = mutableListOf()
+
+        ret.add(action)
+        while (eventNextfromEvent(ret.last().localName) != null) {
+            ret.add(eventNextfromEvent(ret.last().localName)!!)
+        }
+
+        return ret
     }
 
     /** @Section: old Queries do not delete! */
