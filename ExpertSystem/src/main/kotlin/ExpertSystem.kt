@@ -38,7 +38,7 @@ fun main(args: Array<String>) {
         println("RESULT::actionFromToPositionQuery() " +
                 "returned ${action.javaClass}>: \n ${action.localName} \n\n")
 
-        /** @DEMO1: thingInstancesQuery() && eventsActedOnThingQueryS() */
+        /** @DEMO2: thingInstancesQuery() && eventsActedOnThingQueryS() */
         println("__DEMO2::all instances from Thing and show what events acted on that _thing:")
         val thingInstances = q.thingInstancesQuery()
         val eventsActedOnThing: MutableList<MutableList<Resource>> = mutableListOf()
@@ -79,6 +79,20 @@ fun main(args: Array<String>) {
         val actionsAvailableAfterAction = q.resolveAvailableActionsFromAction((eventsActedOnThing[1][2]))
         println("RESULT::actionsAvailableForThing() " +
                 "returned MutableList<Resource>: \n $actionsAvailableAfterAction \n\n")
+
+        /** @DEMO7: Print properties from an individual */
+        println("__DEMO7::Print properties from following individuals.")
+        println("Individuals are: $actionsAvailableForThing")
+        actionsAvailableForThing.map{
+            println("--> properties of individual ${it.localName} :")
+
+            val stmt = it.listProperties()
+            while(stmt.hasNext()){
+                val prop = stmt.next()
+                println("property: ${prop.`object`.toString()}")
+            }
+        }
+
 
     } catch (e: Exception) {
         println("ExpertSystem:: ${e.printStackTrace()}")
