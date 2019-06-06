@@ -1,4 +1,6 @@
 import org.apache.jena.ontology.Individual
+import org.apache.jena.rdf.model.ResourceFactory
+import sun.tools.jstat.Literal
 import java.io.File
 import kotlin.collections.List
 
@@ -80,16 +82,17 @@ class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : Robot
                 ?: throw java.lang.Exception("RobotCommand::PuttingThingToDifferentPlaceCommand(): Should not be null")
         val taskDescription = robot.queryMaster.getTaskDescription(relocationAction.localName)
 
+        // get actionCounter
+        val actionCounterInd = robot.ontModelManager.ontModel.getIndividual( robot.ontPrefix + "actionCounter" )
+        val integerProp = robot.ontModelManager.ontModel.getDatatypeProperty(robot.ontPrefix + "integer") ?: throw Exception("Must have integer")
+        val value = actionCounterInd.getPropertyValue(integerProp)
+        val newVal = value.asLiteral().int + 1
+
+        actionCounterInd.setPropertyValue(integerProp, ResourceFactory.createTypedLiteral(newVal))
         // add relcoation event as individual and add necessary properties/roles to event
-        val relocationIndividual = robot.ontModelManager.ontModel.createIndividual( robot.ontPrefix + "ind0", relocationAction )
+        val relocationIndividual = robot.ontModelManager.ontModel.createIndividual( robot.ontPrefix + "ThingMovementAction" + value.asLiteral().value, relocationAction )
 
         val hasSubActionProp = robot.ontModelManager.ontModel.getObjectProperty(robot.ontPrefix + "hasSubAction") ?: throw Exception("Must have hasSubAction")
-
-        // add all the subactions
-        for (task in taskDescription) {
-            val ind = robot.ontModelManager.ontModel.getIndividual(robot.ontPrefix + task)
-            relocationIndividual.addProperty(hasSubActionProp, ind)
-        }
 
         // add actedOnThing property
         val actedOnThingProp = robot.ontModelManager.ontModel.getObjectProperty(robot.ontPrefix + "actedOnThing") ?: throw Exception("Must have actedOnThing")
@@ -99,15 +102,35 @@ class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : Robot
         val toPositionProp = robot.ontModelManager.ontModel.getObjectProperty(robot.ontPrefix + "toPosition") ?: throw Exception("Must have toPosition")
         relocationIndividual.addProperty(toPositionProp, posInstance)
 
+        // add fromPositoin property
+        val fromPosition = robot.ontModelManager.ontModel.getObjectProperty(robot.ontPrefix + "fromPosition") ?: throw Exception("Must have fromPosition")
+        val actionsAvailableForThing = robot.queryMaster.resolveAvailableActionsOnThing((thingInstance.localName))
+        val lastToPosition = robot.queryMaster.getLastConditionInActionListQuery(actionsAvailableForThing, "toPosition", "Position")
+                ?: throw Exception("ExpertSystem::getLastConditionInActionListQuery(): the Condition \"toPosition\" not found in given List in any Action.")
+        val lastToPositionInstance = robot.ontModelManager.ontModel.getIndividual(lastToPosition.uri)
+        relocationIndividual.addProperty(fromPosition, lastToPositionInstance)
+
+        // add to previous event the previous event property
+        val lastEventOfThing = robot.ontModelManager.ontModel.getIndividual(actionsAvailableForThing.last().uri)
+        val isPrevEventOfProp = robot.ontModelManager.ontModel.getObjectProperty(robot.ontPrefix + "isPreviousEventOf") ?: throw Exception("Must have isPreviousEventOf")
+        lastEventOfThing.addProperty(isPrevEventOfProp, relocationIndividual)
+
+        val actionArray = Array<String?>(robot.ACTION_ARRAY_SIZE){null}
+        actionArray[robot.THING_IDX] = thingInstance.localName
+        actionArray[robot.FROM_LOCATION_IDX] = lastToPositionInstance.localName
+        actionArray[robot.TO_LOCATION_IDX] = posInstance.localName
+
+        // add all the subactions and "execute" them
+        for (task in taskDescription) {
+            val actionInd = robot.ontModelManager.ontModel.getIndividual(robot.ontPrefix + task)
+            actionArray[robot.ACTION_IDX] = actionInd.localName
+            robot.executeAction(actionArray)
+            relocationIndividual.addProperty(hasSubActionProp, actionInd)
+        }
+
         robot.ontModelManager.baseModel.write(File("test.owl").outputStream());
 
-
         // TODO how generate naming!!! - ask for last relcoation instance, define counter...
-
-        // TODO for each task in task description a "function" - just says that it is carried out
-
-        // TODO
-        // get current position of thing
     }
 }
 

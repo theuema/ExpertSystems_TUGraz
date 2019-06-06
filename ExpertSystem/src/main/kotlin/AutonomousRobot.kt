@@ -4,6 +4,13 @@ class AutonomousRobot(val ontName: String, val ontPrefix: String, val ontModelMa
     val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
     var shouldContinue = true
 
+    var ACTION_IDX = 0
+    var THING_IDX = 1
+    var FROM_LOCATION_IDX = 2
+    var TO_LOCATION_IDX = 3
+
+    var ACTION_ARRAY_SIZE = 4
+
     fun run() {
         findAndExecuteCommand(listOf("help"))
 
@@ -30,4 +37,18 @@ class AutonomousRobot(val ontName: String, val ontPrefix: String, val ontModelMa
 
         return false
     }
+
+    fun executeAction(args: Array<String?>) {
+        if(args.size != ACTION_ARRAY_SIZE) throw Exception("Array must be ACTION_ARRAY_SIZE!")
+
+        when (args[ACTION_IDX]) {
+            "Reaching" -> println("Reach thing ${args[THING_IDX]} at position ${args[FROM_LOCATION_IDX]}")
+            "Grabbing" -> println("Grab thing ${args[THING_IDX]}")
+            "Moving" -> println("Move to position ${args[TO_LOCATION_IDX]}")
+            "Releasing" -> println("Release thing ${args[THING_IDX]}")
+            else -> throw Exception("The action ${args[ACTION_IDX]} is not supported")
+        }
+    }
+
+
 }
