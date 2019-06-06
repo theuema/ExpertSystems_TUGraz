@@ -48,7 +48,8 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
      *  @param name of the variable we are looking for (e.g.: the "Action" we need to do next..)
      *  @return List of values of the specific variable, contained in the ResultSet
      */
-    private fun getVariableFromResultSet(results: ResultSet, name: String): MutableList<Resource> {
+    private fun getVariableFromResultSet(results: ResultSet, name: String): MutableList<Resource>? {
+        if (!results.hasNext()) return null
         val ret: MutableList<Resource> = mutableListOf()
 
         while (results.hasNext()) {
@@ -86,7 +87,8 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         return ret
     }
 
-    private fun getTupleVariablesFromResultSet(results: ResultSet, name1: String, name2: String): MutableList<Pair<Resource, Resource>> {
+    private fun getTupleVariablesFromResultSet(results: ResultSet, name1: String, name2: String): MutableList<Pair<Resource, Resource>>? {
+        if (!results.hasNext()) return null
         val ret: MutableList<Pair<Resource, Resource>> = mutableListOf()
 
         while (results.hasNext()) {
@@ -110,9 +112,9 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     }
 
     private fun classInstancesQueryS(`class`: String): String {
-        return "SELECT ?$`class` " +
-                "WHERE { ?$`class` a/rdfs:subClassOf*  :$`class`" +
-                "}"
+        return "SELECT ?$`class` \n" +
+                "WHERE { ?$`class` a/rdfs:subClassOf*  :$`class` \n" +
+                "}\n"
     }
 
     /** @Section: Public Specific Queries */
@@ -120,30 +122,33 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     // written with optional Resource? return value,
     // because we maybe need to check if we even find such an object!?
     fun initialStateOfThingQuery(thing: String): Resource? {
-        val s = "SELECT ?InitialState " +
-                "WHERE { ?InitialState a/rdfs:subClassOf* :InitialState . " +
-                "?InitialState :actedOnThing :$thing . " +
-                "}"
+        val s =
+                "SELECT ?InitialState \n" +
+                        "WHERE { ?InitialState a/rdfs:subClassOf* :InitialState . \n" +
+                        "?InitialState :actedOnThing :$thing . \n" +
+                        "}\n"
 
         return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "InitialState")
     }
 
     fun eventNextfromEvent(event: String): Resource? {
-        val s = "SELECT ?nextEvent " +
-                "WHERE { :${event} :isPreviousEventOf ?nextEvent .}"
+        val s = "SELECT ?nextEvent \n" +
+                "WHERE { :${event} :isPreviousEventOf ?nextEvent . \n" +
+                "}\n"
 
         return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "nextEvent")
     }
 
     fun actionFromToPositionQuery(): Resource? {
-        val s = "SELECT ?Action " +
-                "WHERE { " +
-                "?Action rdfs:subClassOf* :Action . " +
-                "?Action rdfs:subClassOf ?RestrictionFrom . " +
-                "?RestrictionFrom owl:onProperty :fromPosition . " +
-                "?Action rdfs:subClassOf ?RestrictionTo . " +
-                "?RestrictionTo owl:onProperty :toPosition . " +
-                "}"
+        val s =
+                "SELECT ?Action \n" +
+                        "WHERE { \n" +
+                        "?Action rdfs:subClassOf* :Action . \n" +
+                        "?Action rdfs:subClassOf ?RestrictionFrom . \n" +
+                        "?RestrictionFrom owl:onProperty :fromPosition . \n" +
+                        "?Action rdfs:subClassOf ?RestrictionTo . \n" +
+                        "?RestrictionTo owl:onProperty :toPosition . \n" +
+                        "}\n"
 
         return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "Action")
     }
@@ -151,6 +156,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     fun thingInstancesQuery(): MutableList<Resource> {
         val s = classInstancesQueryS("Thing")
         return getVariableFromResultSet(executeSelectQuery(s, false), "Thing")
+                ?: throw Exception("QueryMaster::thingInstancesQuery(): no Instances of class \"Thing\" found. Query: \n $s \n")
     }
 
     // TODO change when can have more classes
@@ -171,37 +177,46 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     }
 
     fun getNextSuperclassQuery(subclass: String): MutableList<Resource> {
-        val query = "SELECT ?Superclass " +
-                "WHERE { :$subclass rdfs:subClassOf ?Superclass}"
+        val s =
+                "SELECT ?Superclass \n" +
+                        "WHERE { :$subclass rdfs:subClassOf ?Superclass \n" +
+                        "}\n"
 
-        return getVariableFromResultSet(executeSelectQuery(query, false), "Superclass")
+        return getVariableFromResultSet(executeSelectQuery(s, false), "Superclass")
+                ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no Superclass of class $subclass found. Query: \n $s \n")
     }
 
     fun getClassOfThingQuery(thing: String): MutableList<Resource> {
-        val query = "SELECT ?Class " +
-                "WHERE { :$thing a ?Class . " +
-                "FILTER (strstarts(str(?Class), \"$ontPrefix\"))" +
-                "}"
+        val s =
+                "SELECT ?Class \n" +
+                        "WHERE { :$thing a ?Class . \n" +
+                        "FILTER (strstarts(str(?Class), \"$ontPrefix\")) \n" +
+                        "} \n"
 
-        return getVariableFromResultSet(executeSelectQuery(query, false), "Class")
+        return getVariableFromResultSet(executeSelectQuery(s, false), "Class")
+                ?: throw Exception("ExpertSystem::getClassOfThingQuery(): no Class of $thing found. Query: \n $s \n")
     }
 
     fun eventsActedOnThingQuery(thing: String): MutableList<Resource> {
-        val s = "SELECT ?Event " +
-                "WHERE { ?Event a/rdfs:subClassOf* :Event . " +
-                "?Event :actedOnThing :$thing . " +
-                "}"
+        val s =
+                "SELECT ?Event \n" +
+                        "WHERE { ?Event a/rdfs:subClassOf* :Event . \n" +
+                        "?Event :actedOnThing :$thing . \n" +
+                        "} \n"
 
         return getVariableFromResultSet(executeSelectQuery(s, false), "Event")
+                ?: throw Exception("ExpertSystem::eventsActedOnThingQuery(): no Events that acted on $s found. Query: \n $s \n")
     }
 
     fun postConditionOfActionQuery(action: String): MutableList<Pair<Resource, Resource>> {
-        val s = "SELECT ?Condition ?Post " +
-                "WHERE { 	?Condition rdfs:subPropertyOf :postCondition . " +
-                ":$action ?Condition  ?Post . " +
-                "}"
+        val s =
+                "SELECT ?Condition ?Post \n" +
+                        "WHERE { ?Condition rdfs:subPropertyOf :postCondition . \n" +
+                        ":$action ?Condition  ?Post . \n" +
+                        "} \n"
 
         return getTupleVariablesFromResultSet(executeSelectQuery(s, false), "Condition", "Post")
+                ?: throw Exception("QueryMaster::postConditionOfActionQuery(): no tuple for \n $s \n found.")
     }
 
     fun resolveAvailableActionsOnThing(thing: String): MutableList<Resource> {
@@ -229,45 +244,65 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         return ret
     }
 
-    /** @Section: old Queries do not delete! */
+    /** Look at Protege on how to create this dataclass.
+     *  Go to your Class (e.g.: puttingThingsFromAtoB) you want to find the superclasses to it with Restrictions as you see on the right.
+     *  Just write it down as you see it in Protege: "hasSubAction exactly 1 Grabbing/Moving/Reaching/Releasing" (subActions is the part we want to get out of the Query)
+     *  actionClassIsSubclassOfDo("puttingThingsFromAtoB", "hasSubAction", "exactly", "subActions")
+     **/
+    data class actionClassIsSubclassOfDo(
+            val composedActionClass: String,
+            val restriction1Object: String,
+            val restriction2Predicate: String,
+            val queryVariable: String,
+            val restriction1Predicate: String = "onProperty"
+    ) {
+        val queryString: String
 
-    fun hasCharacteristicValuePositionMovement(): String {
-        return "SELECT * " + // just return the ?Action variable; using * would return the ?Restriction and ?Value as well
-                "WHERE { " +
-                "?Action rdfs:subClassOf :Action . " +
-                "?Action (owl:equivalentClass|^owl:equivalentClass)* ?Restriction . " + // because of possible symmetry. else: owl:equivalentClass
-                "?Restriction (rdfs:subClassOf|(owl:intersectionOf/rdf:rest*/rdf:first))* ?Value . " + // get all values of restrictions throug itersection
-                "?Value owl:onProperty :hasCharacteristic . " + // ?Value has to be the same in all lines, there returns exactly the one Restriction which is exactly the equ class to our Action
-                "?Value owl:hasValue :positionMovement . " +
-                "}"
+        init {
+            queryString = getActionSuperclassFromMultipleRestrictionS(composedActionClass, restriction1Predicate, restriction1Object, restriction2Predicate, queryVariable)
+        }
+
+        private fun getActionSuperclassFromMultipleRestrictionS(composedActionClass: String, restriction1Predicate: String,
+                                                                restriction1Object: String, restriction2Predicate: String, queryVariable: String): String {
+
+            val resolvedRestriction2Predicate = when (restriction2Predicate) {
+                "exactly" -> "onClass"
+                "value" -> "hasValue"
+                else -> throw Exception("QueryMaster::getActionSuperclassFromMultipleRestrictionS() $restriction2Predicate not handled yet!")
+            }
+
+            return "SELECT ?$queryVariable \n" +
+                    "WHERE { \n" +
+                    ":$composedActionClass rdfs:subClassOf* :Action . \n" +
+                    ":$composedActionClass rdfs:subClassOf* ?Restriction . \n" +
+                    "?Restriction owl:$restriction1Predicate :$restriction1Object . \n" +
+                    "?Restriction owl:$resolvedRestriction2Predicate ?$queryVariable . \n" +
+                    "}\n"
+        }
     }
 
     // gets the task description of a composed action in the right order
-    fun getTaskDescription(composedActionName: String): MutableList<String> {
-        val selectSubActions = "SELECT ?SubActions " +
-                "WHERE { " +
-                ":$composedActionName rdfs:subClassOf* :Action . " +
-                ":$composedActionName rdfs:subClassOf* ?Restriction . " +
-                "?Restriction owl:onProperty :hasSubAction . " +
-                "?Restriction owl:onClass ?SubActions . " +
-                "}"
-        val subActionResources = getVariableFromResultSet(executeSelectQuery(selectSubActions, false), "SubActions")
+    fun getTaskDescription(composedActionClass: String): MutableList<String> {
+        val subActionsDo = actionClassIsSubclassOfDo(composedActionClass, "hasSubAction", "exactly", "SubActions")
+        val subOrderingsDo = actionClassIsSubclassOfDo(composedActionClass, "orderingConstraints", "value", "Orderings")
 
-        val selectOrderings = "SELECT ?Orderings " +
-                "WHERE { " +
-                ":$composedActionName rdfs:subClassOf* :Action . " +
-                ":$composedActionName rdfs:subClassOf* ?Restriction . " +
-                "?Restriction owl:onProperty :orderingConstraints . " +
-                "?Restriction owl:hasValue ?Orderings . " +
-                "}"
-        val orderingResources = getVariableFromResultSet(executeSelectQuery(selectOrderings, false), "Orderings")
+        val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsDo.queryString, false), "SubActions")
+                ?: throw Exception("QueryMaster::getTaskDescription(): " +
+                        "$composedActionClass is SubClass of \"hasSubAction exactly SubActions\" not found. Query: \n ${subActionsDo.queryString} \n ")
+        val orderingResources = getVariableFromResultSet(executeSelectQuery(subOrderingsDo.queryString, false), "Orderings")
+                ?: throw Exception("QueryMaster::getTaskDescription(): " +
+                        "$composedActionClass is SubClass of \"orderingConstraints value Orderings\" not found. Query: \\n ${subOrderingsDo.queryString} \\n \")")
 
         val orderedActions = mergeOrderings(orderingResources)
-        if (orderedActions.size != subActionResources.size) throw Exception("The sizes of orderedActions and subActionResources are not equal: orderedActions.size: ${orderedActions.size}, subActionResources.size: ${subActionResources.size}. Check Ontology!")
+        if (orderedActions.size != subActionResources.size)
+            throw Exception("QueryMaster::getTaskDescription(): " +
+                    "Sizes !equal: orderedActions.size: ${orderedActions.size}, subActionResources.size: ${subActionResources.size}. Check Ontology!")
 
         // check if the orderedActions contains all actions that where specified within the class as subActions
         for (subActionRes in subActionResources) {
-            if (!orderedActions.contains(subActionRes.localName)) throw Exception("The action ${subActionRes.localName} is not in orderedActions. Check Ontology!")
+            if (!orderedActions.contains(subActionRes.localName))
+                throw Exception("QueryMaster::getTaskDescription(): " +
+                        "The action ${subActionRes.localName} is not in orderedActions. Check Ontology!")
         }
 
         return orderedActions
@@ -284,7 +319,9 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                     ":${orderingRes.localName} :happensBeforeInOrdering ?ActionBefore.\n" +
                     ":${orderingRes.localName} :happensAfterInOrdering ?ActionAfter.\n" +
                     "}"
-            val actionBeforeAfterTuple = getTupleVariablesFromResultSet(executeSelectQuery(beforeAfterActionsQuery, false), "ActionBefore", "ActionAfter")
+            val actionBeforeAfterTuple = getTupleVariablesFromResultSet(
+                    executeSelectQuery(beforeAfterActionsQuery, false), "ActionBefore", "ActionAfter")
+                    ?: throw Exception("QueryMaster::mergeOrderings(): no tuple for \n ${beforeAfterActionsQuery} \n found.")
             tupleOrderings.add(Pair(actionBeforeAfterTuple[0].first.localName, actionBeforeAfterTuple[0].second.localName))
         }
 

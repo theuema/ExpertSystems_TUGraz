@@ -55,7 +55,7 @@ class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : Robot
         }
 
         val relocationAction = robot.queryMaster.actionFromToPositionQuery()
-                ?: throw java.lang.Exception("Should not be null")
+                ?: throw java.lang.Exception("RobotCommand::PuttingThingToDifferentPlaceCommand(): Should not be null")
         val taskDescription = robot.queryMaster.getTaskDescription(relocationAction.localName)
 
         for (task in taskDescription) {
