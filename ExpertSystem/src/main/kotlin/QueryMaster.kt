@@ -163,14 +163,21 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     fun getSuperclassesOfThing(thing: String): MutableList<String> {
         val thingClasses: MutableList<String> = mutableListOf()
 
-        var tmpClass = getClassOfThingQuery(thing)[0]
+        var tmpClass = getClassOfObjectQuery(thing)[0]
         thingClasses.add(tmpClass.localName)
 
         while (true) {
-            val tmpList = getNextSuperclassQuery(tmpClass.localName)
-            if (tmpList.isEmpty()) break
-            tmpClass = tmpList[0]
-            thingClasses.add(tmpClass.localName)
+            try {
+                val tmpList = getNextSuperclassQuery(tmpClass.localName)
+                if (tmpList.size != 1) throw Exception("More than one superclass. Need to adapt code.")
+                tmpClass = tmpList[0]
+                thingClasses.add(tmpClass.localName)
+            } catch (e: Exception) {
+                if(e.message != null && e.message!!.startsWith("ExpertSystem::getNextSuperclassQuery(): no Superclass"))
+                    break
+                else
+                    throw e
+            }
         }
 
         return thingClasses
@@ -186,15 +193,23 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no Superclass of class $subclass found. Query: \n $s \n")
     }
 
-    fun getClassOfThingQuery(thing: String): MutableList<Resource> {
+    fun getObjectsWithClass(className: String): MutableList<Resource> {
+        val s = "SELECT ?Objects \n" +
+                "WHERE { ?Objects a :$className. }"
+
+        return getVariableFromResultSet(executeSelectQuery(s, false), "Objects")
+                ?: throw Exception("ExpertSystem::getObjectsWithClass(): no object of $className found. Query: \n $s \n")
+    }
+
+    fun getClassOfObjectQuery(`object`: String): MutableList<Resource> {
         val s =
                 "SELECT ?Class \n" +
-                        "WHERE { :$thing a ?Class . \n" +
+                        "WHERE { :$`object` a ?Class . \n" +
                         "FILTER (strstarts(str(?Class), \"$ontPrefix\")) \n" +
                         "} \n"
 
         return getVariableFromResultSet(executeSelectQuery(s, false), "Class")
-                ?: throw Exception("ExpertSystem::getClassOfThingQuery(): no Class of $thing found. Query: \n $s \n")
+                ?: throw Exception("ExpertSystem::getClassOfObjectQuery(): no Class of $`object` found. Query: \n $s \n")
     }
 
     fun eventsActedOnThingQuery(thing: String): MutableList<Resource> {
@@ -217,6 +232,16 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
 
         return getTupleVariablesFromResultSet(executeSelectQuery(s, false), "Condition", "Post")
                 ?: throw Exception("QueryMaster::postConditionOfActionQuery(): no tuple for \n $s \n found.")
+    }
+
+    // This function returns the direct subProperties of the passed property
+    fun getSubPropertiesOf(propertyName: String): MutableList<Resource> {
+        val s = "SELECT ?Condition\n" +
+                "WHERE { ?Condition rdfs:subPropertyOf $propertyName . }"
+        print(s)
+
+        return getVariableFromResultSet(executeSelectQuery(s, false), "Condition")
+                ?: throw Exception("ExpertSystem::getSubProperties(): no sub properties for the property that $propertyName. Query: \n $s \n")
     }
 
     fun resolveAvailableActionsOnThing(thing: String): MutableList<Resource> {
@@ -283,7 +308,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
 
     // gets the task description of a composed action in the right order
     fun getTaskDescription(composedActionClass: String): MutableList<String> {
-        val subActionsDo = actionClassIsSubclassOfDo(composedActionClass, "hasSubAction", "exactly", "SubActions")
+        val subActionsDo = actionClassIsSubclassOfDo(composedActionClass, "hasSubAction", "value", "SubActions")
         val subOrderingsDo = actionClassIsSubclassOfDo(composedActionClass, "orderingConstraints", "value", "Orderings")
 
         val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsDo.queryString, false), "SubActions")

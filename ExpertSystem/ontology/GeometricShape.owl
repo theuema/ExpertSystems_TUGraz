@@ -323,26 +323,10 @@
     
 
 
-    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
-    </owl:Class>
-    
-
-
     <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#InitialState">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Event"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:Class>
     
 
@@ -392,6 +376,30 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
+                <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
+                <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
+                <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
+                <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#orderingConstraints"/>
                 <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering1PuttingThingFromAToB"/>
             </owl:Restriction>
@@ -408,34 +416,6 @@
                 <owl:hasValue rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering3PuttingThingFromAToB"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#hasSubAction"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
     </owl:Class>
     
 
@@ -445,22 +425,6 @@
     <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Pyramid">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#GeometricShape"/>
         <owl:disjointWith rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Sphere"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:Class>
     
 
@@ -501,8 +465,8 @@
     <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing">
-        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Grabbing"/>
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:NamedIndividual>
     
 
@@ -510,8 +474,8 @@
     <!-- http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving">
-        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Moving"/>
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:NamedIndividual>
     
 
@@ -580,7 +544,7 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
-        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Reaching"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:NamedIndividual>
     
 
@@ -589,7 +553,7 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing">
         <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#PartialOrdering"/>
-        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#Releasing"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/GeometricShape#UnitAction"/>
     </owl:NamedIndividual>
     
 
