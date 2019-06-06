@@ -104,6 +104,21 @@ fun main(args: Array<String>) {
             println("RESULT::postConditionOfActionQuery() " +
                     "returned MutableList<Pair(Resource, Resource)>: \n $postConditionTuple \n\n")
 
+
+            /** @DEMO9: Get the current Condition for an Instace of an Action  */
+            println("__DEMO9::Get the current toPosition condition for the Instance Action: ${eventsActedOnThing[1][2].localName}:")
+            val toPosition = q.getConditionOfActionInstanceQuery(eventsActedOnThing[1][2].localName, "toPosition", "Position")
+                    ?: throw Exception("ExpertSystem::getConditionOfActionInstanceQuery(): no Condition \"toPosition\" found within ${eventsActedOnThing[1][2].localName}.")
+            println("RESULT::getConditionOfActionInstanceQuery() " +
+                    "returned ${toPosition.javaClass}: \n ${toPosition.localName} \n\n")
+
+
+            /** @DEM10: Get the last Condition Value for toPosition in an actionList  */
+            println("__DEM10::Get the last Condition Value for \"toPosition\" in the following actionList: \n $actionsAvailableForThing")
+            val lastToPosition = q.getLastConditionInActionListQuery(actionsAvailableForThing, "toPosition", "Position")
+                    ?: throw Exception("ExpertSystem::getLastConditionInActionListQuery(): the Condition \"toPosition\" not found in given List in any Action.")
+            println("RESULT::getLastConditionInActionListQuery() " +
+                    "returned ${lastToPosition.javaClass}: \n ${lastToPosition.localName} \n\n")
         }
     } catch (e: Exception) {
         println("ExpertSystem:: ${e.printStackTrace()}")
