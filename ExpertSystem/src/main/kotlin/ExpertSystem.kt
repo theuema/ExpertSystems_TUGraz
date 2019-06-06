@@ -2,7 +2,7 @@ import org.apache.jena.rdf.model.Resource
 
 fun main(args: Array<String>) {
     // Settings
-    val robotActive = false
+    val robotActive = true
     val showModel = false
 
     // Ontology definitions
