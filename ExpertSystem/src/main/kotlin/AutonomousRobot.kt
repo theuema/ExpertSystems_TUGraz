@@ -1,16 +1,8 @@
-class AutonomousRobot() {
-    // Commands
+class AutonomousRobot(val ontName: String, val ontPrefix: String, val ontModelManager: OntologyModelManager) {
     val commands = listOf(HelpCommand(this), ThingsCommand(this), StateCommand(this), ExitCommand(this),
             PuttingThingToDifferentPlaceCommand(this))
-    var shouldContinue = true
-
-    // Ontology
-    val ontName = "GeometricShape"
-    val ontPrefix = "http://www.semanticweb.org/autonomous_robot/ontologies/2019/5/" + ontName + "#"
-    val ontModelManager = OntologyModelManager("file:ontology/" + ontName + ".owl")
-
-    // Query Master
     val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
+    var shouldContinue = true
 
     fun run() {
         findAndExecuteCommand(listOf("help"))
