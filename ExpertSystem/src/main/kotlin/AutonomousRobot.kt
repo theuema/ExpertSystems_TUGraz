@@ -1,6 +1,5 @@
 class AutonomousRobot(val ontName: String, val ontPrefix: String, val ontModelManager: OntologyModelManager) {
-    val commands = listOf(HelpCommand(this), ThingsCommand(this), StateCommand(this), ExitCommand(this),
-            PuttingThingToDifferentPlaceCommand(this))
+    val commands = listOf(HelpCommand(this), ListSkillCommand(this), SkillRequireCommand(this), ExitCommand(this))
     val queryMaster = QueryMaster(ontModelManager.baseModel, ontModelManager.ontModel, ontPrefix)
     var shouldContinue = true
 

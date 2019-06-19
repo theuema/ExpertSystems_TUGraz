@@ -7,9 +7,12 @@ import org.apache.jena.rdf.model.Resource
 
 class QueryMaster(private val model: Model, private val ontModel: OntModel, private val ontPrefix: String) {
     private val rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    private val rdfs = "http://www.w3.org/2000/01/rdf-schema#"
     private val owl = "http://www.w3.org/2002/07/owl#"
+    private val owl2xml = "http://www.w3.org/2006/12/owl2-xml#"
     private val xsd = "http://www.w3.org/2001/XMLSchema#"
+    private val knowrob = "http://ias.cs.tum.edu/kb/knowrob.owl#"
+    private val rdfs = "http://www.w3.org/2000/01/rdf-schema#"
+    private val computable = "http://ias.cs.tum.edu/kb/computable.owl#"
     private val queryPrefix: String
 
     init {
@@ -19,17 +22,20 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     /** @Section: Functions */
 
     private fun buildQueryPrefix(): String {
-        return "PREFIX rdf: <$rdf> " +
-                "PREFIX rdfs: <$rdfs> " +
+        return  "PREFIX : <$ontPrefix> " +
+                "PREFIX rdf: <$rdf> " +
                 "PREFIX owl: <$owl> " +
+                "PREFIX owl2xml: <$owl2xml> " +
                 "PREFIX xsd: <$xsd> " +
-                "PREFIX : <$ontPrefix> "
+                "PREFIX knowrob: <$knowrob> " +
+                "PREFIX rdfs: <$rdfs> " +
+                "PREFIX computable: <$computable> "
     }
 
     /** Look at Protege on how to create this dataclass.
      *  Go to your Class (e.g.: puttingThingsFromAtoB) you want to find the superclasses to it with Restrictions as you see on the right.
-     *  Just write it down as you see it in Protege: "hasSubAction exactly 1 Grabbing/Moving/Reaching/Releasing" (subActions is the part we want to get out of the Query)
-     *  actionClassIsSubclassOfDo("puttingThingsFromAtoB", "hasSubAction", "exactly", "subActions")
+     *  Just write it down as you see it in Protege: "subAction exactly 1 Grabbing/Moving/Reaching/Releasing" (subActions is the part we want to get out of the Query)
+     *  actionClassIsSubclassOfDo("puttingThingsFromAtoB", "subAction", "exactly", "subActions")
      **/
     data class actionClassIsSubclassOfDo(
             val composedActionClass: String,
@@ -50,6 +56,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
             val resolvedRestriction2Predicate = when (restriction2Predicate) {
                 "exactly" -> "onClass"
                 "value" -> "hasValue"
+                "some" -> "someValuesFrom"
                 else -> throw Exception("QueryMaster::getActionSuperclassFromMultipleRestrictionS() $restriction2Predicate not handled yet!")
             }
 
@@ -363,12 +370,12 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
 
     // gets the task description of a composed action in the right order
     fun getTaskDescription(composedActionClass: String): MutableList<String> {
-        val subActionsDo = actionClassIsSubclassOfDo(composedActionClass, "hasSubAction", "value", "SubActions")
+        val subActionsDo = actionClassIsSubclassOfDo(composedActionClass, "subAction", "some", "SubActions")
         val subOrderingsDo = actionClassIsSubclassOfDo(composedActionClass, "orderingConstraints", "value", "Orderings")
 
         val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsDo.queryString, false), "SubActions")
                 ?: throw Exception("QueryMaster::getTaskDescription(): " +
-                        "$composedActionClass is SubClass of \"hasSubAction exactly SubActions\" not found. Query: \n ${subActionsDo.queryString} \n ")
+                        "$composedActionClass is SubClass of \"subAction some SubActions\" not found. Query: \n ${subActionsDo.queryString} \n ")
         val orderingResources = getVariableFromResultSet(executeSelectQuery(subOrderingsDo.queryString, false), "Orderings")
                 ?: throw Exception("QueryMaster::getTaskDescription(): " +
                         "$composedActionClass is SubClass of \"orderingConstraints value Orderings\" not found. Query: \\n ${subOrderingsDo.queryString} \\n \")")
