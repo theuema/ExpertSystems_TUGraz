@@ -461,7 +461,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "SELECT ?Subclass \n" +
                         "WHERE { ?Subclass rdfs:subClassOf* :$superclass \n" +
                         "}\n"
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Subclass")
+        return getVariableFromResultSet(executeSelectQuery(s, true), "Subclass")
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no subclass of class $superclass found. Query: \n $s \n")
     }
 }

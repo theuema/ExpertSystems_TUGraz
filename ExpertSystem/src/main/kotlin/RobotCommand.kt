@@ -35,7 +35,7 @@ class ExitCommand(val tmpRobot: AutonomousRobot) : RobotCommand("exit", "exit", 
         }
 
         println("Bye")
-        robot.shouldContinue = false;
+        robot.shouldContinue = false
     }
 }
 
@@ -45,8 +45,12 @@ class ListCapabilityCommand(val tmpRobot: AutonomousRobot) : RobotCommand("skill
             println("No argument needed!")
             return
         }
-
-        // TODO
+        val capabilities = robot.queryMaster.getSubClassQuery("Capability")
+        print("Capabilities: \n")
+        for (cap in capabilities) {
+            print(cap.localName + "\n")
+        }
+        print("\n")
     }
 }
 
