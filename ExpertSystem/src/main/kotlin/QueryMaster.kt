@@ -454,4 +454,14 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         if (tupleOrderings.size != 0) throw Exception("List must be empty. Problem within ontology")
         return orderedSubActions
     }
+
+    // new knowrob queries
+    fun getSubClassQuery(superclass: String): MutableList<Resource> {
+        val s =
+                "SELECT ?Subclass \n" +
+                        "WHERE { ?Subclass rdfs:subClassOf* :$superclass \n" +
+                        "}\n"
+        return getVariableFromResultSet(executeSelectQuery(s, false), "Subclass")
+                ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no subclass of class $superclass found. Query: \n $s \n")
+    }
 }
