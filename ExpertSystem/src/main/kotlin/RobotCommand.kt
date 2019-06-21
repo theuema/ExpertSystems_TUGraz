@@ -39,7 +39,7 @@ class ExitCommand(val tmpRobot: AutonomousRobot) : RobotCommand("exit", "exit", 
     }
 }
 
-class ListSkillCommand(val tmpRobot: AutonomousRobot) : RobotCommand("skills", "skills", "lists all available skills", tmpRobot) {
+class ListCapabilityCommand(val tmpRobot: AutonomousRobot) : RobotCommand("skills", "skills", "lists all available skills", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         if (args.size != 1) {
             println("No argument needed!")
@@ -50,7 +50,7 @@ class ListSkillCommand(val tmpRobot: AutonomousRobot) : RobotCommand("skills", "
     }
 }
 
-class SkillRequireCommand(val tmpRobot: AutonomousRobot) : RobotCommand("require", "require skill_name", "lists all requirements for the skill", tmpRobot) {
+class CapabilityRequireCommand(val tmpRobot: AutonomousRobot) : RobotCommand("require", "require skill_name", "lists all requirements for the skill", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         if (args.size != 2) {
             println("Exactly one needed!")
