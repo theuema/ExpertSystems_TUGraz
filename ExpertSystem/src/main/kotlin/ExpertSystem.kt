@@ -2,11 +2,11 @@ import org.apache.jena.rdf.model.Resource
 
 fun main(args: Array<String>) {
     // Settings
-    val robotActive = false
-    val showModel = true
+    val robotActive = true
+    val showModel = false
 
     // Ontology definitions
-    val ontName = "srdl2-comp"
+    val ontName = "srdl2-cap"
     val ontPrefix = "http://ias.cs.tum.edu/kb/" + ontName + "#"
     val ontModelManager = OntologyModelManager("file:ontologies/" + ontName + ".owl")
 
