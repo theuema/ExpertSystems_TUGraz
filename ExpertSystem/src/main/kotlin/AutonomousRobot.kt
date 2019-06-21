@@ -49,5 +49,31 @@ class AutonomousRobot(val ontName: String, val ontPrefix: String, val ontModelMa
         }
     }
 
+    fun getRequiredCapabilitesOfCapability(capability: String) : List<String> {
+        val requiredCapabilites : MutableList<String> = mutableListOf()
 
+
+        return requiredCapabilites
+    }
+
+    fun getRequiredComponentsOfCapability(capability: String) : List<String> {
+        val requiredComponents : MutableList<String> = mutableListOf()
+
+
+        return requiredComponents
+    }
+
+    fun getRequiredCapabilitesOfComponent(component: String) : List<String> {
+        val requiredCapabilites : MutableList<String> = mutableListOf()
+
+
+        return requiredCapabilites
+    }
+
+    fun getRequiredComponentsOfComponent(component: String) : List<String> {
+        val requiredComponents : MutableList<String> = mutableListOf()
+
+
+        return requiredComponents
+    }
 }
