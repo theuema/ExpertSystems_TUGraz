@@ -7,11 +7,11 @@ fun main(args: Array<String>) {
 
     // Ontology definitions
     val ontName = "srdl2-cap"
-    val ontPrefix = "http://ias.cs.tum.edu/kb/" + ontName + ".owl#"
-    val ontModelManager = OntologyModelManager("file:ontologies/" + ontName + ".owl")
+    val ontPrefixUrl = "http://ias.cs.tum.edu/kb/" + ontName + ".owl#"
+    val ontModelManager = OntologyModelManager(ontPrefixUrl)
 
     try {
-        val robot = AutonomousRobot(ontName, ontPrefix, ontModelManager)
+        val robot = AutonomousRobot(ontName, ontPrefixUrl, ontModelManager)
         if (robotActive) robot.run() else {
 
             // inspect model and/or test
