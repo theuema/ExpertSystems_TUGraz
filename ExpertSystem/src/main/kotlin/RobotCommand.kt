@@ -155,7 +155,7 @@ class PuttingThingToDifferentPlaceCommand(val tmpRobot: AutonomousRobot) : Robot
             relocationIndividual.addProperty(hasSubActionProp, actionInd)
         }
 
-        robot.ontModelManager.baseModel.write(File("test.owl").outputStream());
+        robot.ontModelManager.ontModel.write(File("test.owl").outputStream());
 
         // TODO how generate naming!!! - ask for last relcoation instance, define counter...
     }

@@ -1,19 +1,14 @@
 import org.apache.jena.ontology.OntModel
 import org.apache.jena.ontology.OntModelSpec
-import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
-import org.apache.jena.util.FileManager
 import org.apache.jena.rdf.model.Resource
 
-class OntologyModelManager(private val filename: String) {
-    val ontModel: OntModel
-    val baseModel: Model
+class OntologyModelManager(private val ontBaseUrl: String) {
+    val ontModel: OntModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM) //OWL_MEM lt. code example from email
 
     init {
-        baseModel = FileManager.get().loadModel(filename)
-        ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF, baseModel)
-        //ontModel.read(filename)  // seems like it is not needed?
-        println("OntologyModelManager::$filename loaded!\n\n")
+        ontModel.read(ontBaseUrl)
+        println("OntologyModelManager::$ontBaseUrl loaded!\n\n")
     }
 
     // Functions

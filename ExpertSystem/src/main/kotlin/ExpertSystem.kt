@@ -7,7 +7,7 @@ fun main(args: Array<String>) {
 
     // Ontology definitions
     val ontName = "srdl2-cap"
-    val ontPrefix = "http://ias.cs.tum.edu/kb/" + ontName + "#"
+    val ontPrefix = "http://ias.cs.tum.edu/kb/" + ontName + ".owl#"
     val ontModelManager = OntologyModelManager("file:ontologies/" + ontName + ".owl")
 
     try {

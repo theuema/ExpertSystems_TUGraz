@@ -1,35 +1,38 @@
-import org.apache.commons.lang3.mutable.Mutable
 import org.apache.jena.ontology.OntModel
 import org.apache.jena.query.*
 import org.apache.jena.rdf.model.Literal
-import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.Resource
 
-class QueryMaster(private val model: Model, private val ontModel: OntModel, private val ontPrefix: String) {
+class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String) {
+    private val srdl2 = "http://ias.cs.tum.edu/kb/srdl2.owl#"
+    private val owl2xml = "http://www.w3.org/2006/12/owl2-xml#"
+    private val knowrob = "http://ias.cs.tum.edu/kb/knowrob.owl#"
+    private val srdl2comp = "http://ias.cs.tum.edu/kb/srdl2-comp.owl#"
+    private val computable = "http://ias.cs.tum.edu/kb/computable.owl#"
+    private val dc = "http://purl.org/dc/elements/1.1/"
+    // todo: remove prefixe at the end da wsl nie gebraucht
+
     private val rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     private val owl = "http://www.w3.org/2002/07/owl#"
-    private val owl2xml = "http://www.w3.org/2006/12/owl2-xml#"
-    private val xsd = "http://www.w3.org/2001/XMLSchema#"
-    private val knowrob = "http://ias.cs.tum.edu/kb/knowrob.owl#"
     private val rdfs = "http://www.w3.org/2000/01/rdf-schema#"
-    private val computable = "http://ias.cs.tum.edu/kb/computable.owl#"
+    private val xsd = "http://www.w3.org/2001/XMLSchema#"
     private val queryPrefix: String
+    private val control = "http://ias.cs.tum.edu/kb/srdl2-cap.owl#"
+
 
     init {
+        if (ontPrefix != control) throw Exception("QueryMaster::init(): $ontPrefix != $control")
         queryPrefix = buildQueryPrefix()
     }
 
     /** @Section: Functions */
 
     private fun buildQueryPrefix(): String {
-        return  "PREFIX : <$ontPrefix> " +
-                "PREFIX rdf: <$rdf> " +
-                "PREFIX owl: <$owl> " +
-                "PREFIX owl2xml: <$owl2xml> " +
-                "PREFIX xsd: <$xsd> " +
-                "PREFIX knowrob: <$knowrob> " +
-                "PREFIX rdfs: <$rdfs> " +
-                "PREFIX computable: <$computable> "
+        return "PREFIX rdf: <$rdf> \n" +
+                "PREFIX owl: <$owl> \n" +
+                "PREFIX rdfs: <$rdfs> \n" +
+                "PREFIX xsd: <$xsd> \n" +
+                "PREFIX : <$ontPrefix> "
     }
 
     /** Look at Protege on how to create this dataclass.
@@ -77,13 +80,12 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
      *  @param useOntModel specifies if we need reasoning or not
      *  @return copy of the resulting ResultSet object
      */
-    private fun executeSelectQuery(selectQueryString: String, useOntModel: Boolean): ResultSet {
-        val m = if (useOntModel) ontModel else model
+    private fun executeSelectQuery(selectQueryString: String): ResultSet {
         val query = QueryFactory.create(queryPrefix + selectQueryString)
 
         // .use{} takes advantage of java's auto-close and closes the QueryExecution
         //        takes care of exception handling
-        QueryExecutionFactory.create(query, m).use {
+        QueryExecutionFactory.create(query, ontModel).use {
             return ResultSetFactory.copyResults(it.execSelect())
         }
     }
@@ -176,7 +178,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                         "?InitialState :actedOnThing :$thing . \n" +
                         "}\n"
 
-        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "InitialState")
+        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s), "InitialState")
     }
 
     /** Gives the Instance of an Event that follows the Instance of the actual Event
@@ -187,7 +189,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "WHERE { :${event} :isPreviousEventOf ?nextEvent . \n" +
                 "}\n"
 
-        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "nextEvent")
+        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s), "nextEvent")
     }
 
     /** Gives you the Action-Class that can carry a thing from a Position to a Position **/
@@ -202,7 +204,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                         "?RestrictionTo owl:onProperty :toPosition . \n" +
                         "}\n"
 
-        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), "Action")
+        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s), "Action")
     }
 
     /** @param actionInstance example: PuttingPyramidFromPos1ToPos2
@@ -218,7 +220,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                         ":$condition rdfs:subPropertyOf* :condition . \n" +
                         "}\n"
 
-        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s, false), queryVariable)
+        return getOnlyObjectVariableFromResultSet(executeSelectQuery(s), queryVariable)
     }
 
     /** @param actionList is an ordered List of Actions of instances of Things
@@ -240,7 +242,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     /** Gives all Instances of Class Thing **/
     fun thingInstancesQuery(): MutableList<Resource> {
         val s = classInstancesQueryS("Thing")
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Thing")
+        return getVariableFromResultSet(executeSelectQuery(s), "Thing")
                 ?: throw Exception("QueryMaster::thingInstancesQuery(): no Instances of class \"Thing\" found. Query: \n $s \n")
     }
 
@@ -258,7 +260,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 tmpClass = tmpList[0]
                 thingClasses.add(tmpClass.localName)
             } catch (e: Exception) {
-                if(e.message != null && e.message!!.startsWith("ExpertSystem::getNextSuperclassQuery(): no Superclass"))
+                if (e.message != null && e.message!!.startsWith("ExpertSystem::getNextSuperclassQuery(): no Superclass"))
                     break
                 else
                     throw e
@@ -274,7 +276,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                         "WHERE { :$subclass rdfs:subClassOf ?Superclass \n" +
                         "}\n"
 
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Superclass")
+        return getVariableFromResultSet(executeSelectQuery(s), "Superclass")
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no Superclass of class $subclass found. Query: \n $s \n")
     }
 
@@ -282,7 +284,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         val s = "SELECT ?Objects \n" +
                 "WHERE { ?Objects a :$className. }"
 
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Objects")
+        return getVariableFromResultSet(executeSelectQuery(s), "Objects")
                 ?: throw Exception("ExpertSystem::getObjectsWithClass(): no object of $className found. Query: \n $s \n")
     }
 
@@ -293,7 +295,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                         "FILTER (strstarts(str(?Class), \"$ontPrefix\")) \n" +
                         "} \n"
 
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Class")
+        return getVariableFromResultSet(executeSelectQuery(s), "Class")
                 ?: throw Exception("ExpertSystem::getClassOfObjectQuery(): no Class of $`object` found. Query: \n $s \n")
     }
 
@@ -307,7 +309,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                         "?Event :actedOnThing :$thing . \n" +
                         "} \n"
 
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Event")
+        return getVariableFromResultSet(executeSelectQuery(s), "Event")
                 ?: throw Exception("ExpertSystem::eventsActedOnThingQuery(): no Events that acted on $s found. Query: \n $s \n")
     }
 
@@ -321,7 +323,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                         ":$action ?Condition  ?Post . \n" +
                         "} \n"
 
-        return getTupleVariablesFromResultSet(executeSelectQuery(s, false), "Condition", "Post")
+        return getTupleVariablesFromResultSet(executeSelectQuery(s), "Condition", "Post")
                 ?: throw Exception("QueryMaster::postConditionOfActionQuery(): no tuple for \n $s \n found.")
     }
 
@@ -333,7 +335,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                 "WHERE { ?Condition rdfs:subPropertyOf $propertyName . }"
         print(s)
 
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Condition")
+        return getVariableFromResultSet(executeSelectQuery(s), "Condition")
                 ?: throw Exception("ExpertSystem::getSubProperties(): no sub properties for the property that $propertyName. Query: \n $s \n")
     }
 
@@ -373,10 +375,10 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
         val subActionsDo = actionClassIsSubclassOfDo(composedActionClass, "subAction", "some", "SubActions")
         val subOrderingsDo = actionClassIsSubclassOfDo(composedActionClass, "orderingConstraints", "value", "Orderings")
 
-        val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsDo.queryString, false), "SubActions")
+        val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsDo.queryString), "SubActions")
                 ?: throw Exception("QueryMaster::getTaskDescription(): " +
                         "$composedActionClass is SubClass of \"subAction some SubActions\" not found. Query: \n ${subActionsDo.queryString} \n ")
-        val orderingResources = getVariableFromResultSet(executeSelectQuery(subOrderingsDo.queryString, false), "Orderings")
+        val orderingResources = getVariableFromResultSet(executeSelectQuery(subOrderingsDo.queryString), "Orderings")
                 ?: throw Exception("QueryMaster::getTaskDescription(): " +
                         "$composedActionClass is SubClass of \"orderingConstraints value Orderings\" not found. Query: \\n ${subOrderingsDo.queryString} \\n \")")
 
@@ -407,7 +409,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
                     ":${orderingRes.localName} :happensAfterInOrdering ?ActionAfter.\n" +
                     "}"
             val actionBeforeAfterTuple = getTupleVariablesFromResultSet(
-                    executeSelectQuery(beforeAfterActionsQuery, false), "ActionBefore", "ActionAfter")
+                    executeSelectQuery(beforeAfterActionsQuery), "ActionBefore", "ActionAfter")
                     ?: throw Exception("QueryMaster::mergeOrderings(): no tuple for \n ${beforeAfterActionsQuery} \n found.")
             tupleOrderings.add(Pair(actionBeforeAfterTuple[0].first.localName, actionBeforeAfterTuple[0].second.localName))
         }
@@ -459,9 +461,9 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
     fun getSubClassQuery(superclass: String): MutableList<Resource> {
         val s =
                 "SELECT ?Subclass \n" +
-                        "WHERE { ?Subclass rdfs:subClassOf* :$superclass \n" +
+                        "WHERE { ?Subclass rdfs:subClassOf* :$superclass . \n" +
                         "}\n"
-        return getVariableFromResultSet(executeSelectQuery(s, false), "Subclass")
+        return getVariableFromResultSet(executeSelectQuery(s), "Subclass")
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no subclass of class $superclass found. Query: \n $s \n")
     }
 }
