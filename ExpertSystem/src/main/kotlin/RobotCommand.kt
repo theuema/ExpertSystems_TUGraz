@@ -105,6 +105,8 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
     }
 
     // TODO maybe loop checking - add parent and look for same name occurrence
+
+    // TODO all things in hierarchy and only one appearance
     fun fillCapCompWithRequiredComponentsAndCapabilities(compCap: ComponentCapability) {
         compCap.capabilities.clear()
         compCap.components.clear()
