@@ -40,22 +40,23 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     /** Look at Protege on how to create this dataclass.
      *  Go to your Class (e.g.: puttingThingsFromAtoB) you want to find the superclasses to it with Restrictions as you see on the right.
      *  Just write it down as you see it in Protege: "subAction exactly 1 Grabbing/Moving/Reaching/Releasing" (subActions is the part we want to get out of the Query)
-     *  specifiedObjectPropertiesFromCategoryDo("puttingThingsFromAtoB", "Action", "subAction", "exactly", "subActions")
+     *  SpecifiedObjectPropertiesFromCategoryDo("puttingThingsFromAtoB", "Action", "subAction", "exactly", "subActions")
      **/
-    data class specifiedObjectPropertiesFromCategoryDo(
+    data class SpecifiedObjectPropertiesFromCategoryDo(
             val category: String,
             val subClassOf: String,
             val objectProperty: String,
             val quantifier: String,
             val queryVariable: String,
             val objectPropertyPrefix: String = "",
+            val superClassPrefix: String = "",
             val restriction1Predicate: String = "onProperty"
     ) {
         val queryString: String
 
         init {
             queryString = getSpecifiedObjectPropertiesFromCategory(category, subClassOf, restriction1Predicate, objectProperty,
-                    quantifier, queryVariable, objectPropertyPrefix)
+                    quantifier, queryVariable, objectPropertyPrefix, superClassPrefix)
         }
 
         private fun getSpecifiedObjectPropertiesFromCategory(category: String,
@@ -64,7 +65,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
                                                              objectProperty: String,
                                                              quantifier: String,
                                                              queryVariable: String,
-                                                             objectPropertyPrefix: String): String {
+                                                             objectPropertyPrefix: String,
+                                                             superClassPrefix: String): String {
 
             val resolvedRestriction2Predicate = when (quantifier) {
                 "exactly" -> "onClass"
@@ -75,7 +77,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
 
             return "SELECT ?$queryVariable \n" +
                     "WHERE { \n" +
-                    ":$category rdfs:subClassOf* :$superClass . \n" +
+                    ":$category rdfs:subClassOf* $superClassPrefix:$superClass . \n" +
                     ":$category rdfs:subClassOf* ?Restriction . \n" +
                     "?Restriction owl:$restriction1Predicate $objectPropertyPrefix:$objectProperty . \n" +
                     "?Restriction owl:$resolvedRestriction2Predicate ?$queryVariable . \n" +
@@ -114,8 +116,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
             when (obj.get(name)) {
                 is Resource -> ret.add(obj.getResource(name))
                 is Literal -> throw Exception("QueryMaster::getVariableFromResultSet(): result for $name was Literal.")
-            // maybe we need to change else -> to optional: ret.add(null)
-            // if we need to check for other object we actually don't want or just 'continue' if we find other objects..
+                // maybe we need to change else -> to optional: ret.add(null)
+                // if we need to check for other object we actually don't want or just 'continue' if we find other objects..
                 else -> throw Exception("QueryMaster::getVariableFromResultSet(): no variable $name in actual QuerySolution.")
             }
         }
@@ -382,8 +384,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
 
     // gets the task description of a composed action in the right order
     fun getTaskDescription(composedActionClass: String): MutableList<String> {
-        val subActionsDo = specifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "subAction", "some", "SubActions")
-        val subOrderingsDo = specifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "orderingConstraints", "value", "Orderings")
+        val subActionsDo = SpecifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "subAction", "some", "SubActions")
+        val subOrderingsDo = SpecifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "orderingConstraints", "value", "Orderings")
 
         val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsDo.queryString), "SubActions")
                 ?: throw Exception("QueryMaster::getTaskDescription(): " +
@@ -471,13 +473,14 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     fun getSubClassQuery(superclass: String): MutableList<Resource> {
         val s =
                 "SELECT ?Subclass \n" +
-                        "WHERE { ?Subclass rdfs:subClassOf* :$superclass . \n" +
+                        "WHERE {?Subclass rdfs:subClassOf* :$superclass . \n" +
+                        "FILTER (?Subclass != :$superclass) \n" +
                         "}\n"
         return getVariableFromResultSet(executeSelectQuery(s), "Subclass")
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no subclass of class $superclass found. Query: \n $s \n")
     }
 
-    fun getObjectFromDataClass(c: specifiedObjectPropertiesFromCategoryDo, queryVariable: String): MutableList<Resource> {
+    fun getObjectFromDataClass(c: SpecifiedObjectPropertiesFromCategoryDo, queryVariable: String): MutableList<Resource> {
         return getVariableFromResultSet(executeSelectQuery(c.queryString), queryVariable)
                 ?: throw Exception("QueryMaster::getComponentsFromDataClass(): " +
                         "Object $queryVariable not found. Query: \n ${c.queryString} \n ")
