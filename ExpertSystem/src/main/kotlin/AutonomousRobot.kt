@@ -1,3 +1,5 @@
+import org.apache.jena.rdf.model.Resource
+
 class AutonomousRobot(val ontName: String, val ontPrefix: String, val ontModelManager: OntologyModelManager) {
     val commands = listOf(HelpCommand(this), ListCapabilityCommand(this), CapabilityRequireCommand(this), ExitCommand(this))
     val queryMaster = QueryMaster(ontModelManager.ontModel, ontPrefix)
@@ -47,33 +49,5 @@ class AutonomousRobot(val ontName: String, val ontPrefix: String, val ontModelMa
             "Releasing" -> println("Release thing ${args[THING_IDX]}")
             else -> throw Exception("The action ${args[ACTION_IDX]} is not supported")
         }
-    }
-
-    fun getRequiredCapabilitesOfCapability(capability: String) : List<String> {
-        val requiredCapabilites : MutableList<String> = mutableListOf()
-
-
-        return requiredCapabilites
-    }
-
-    fun getRequiredComponentsOfCapability(capability: String) : List<String> {
-        val requiredComponents : MutableList<String> = mutableListOf()
-
-
-        return requiredComponents
-    }
-
-    fun getRequiredCapabilitesOfComponent(component: String) : List<String> {
-        val requiredCapabilites : MutableList<String> = mutableListOf()
-
-
-        return requiredCapabilites
-    }
-
-    fun getRequiredComponentsOfComponent(component: String) : List<String> {
-        val requiredComponents : MutableList<String> = mutableListOf()
-
-
-        return requiredComponents
     }
 }

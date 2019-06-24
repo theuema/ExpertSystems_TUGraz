@@ -1,6 +1,6 @@
 import org.apache.jena.ontology.Individual
 import org.apache.jena.rdf.model.ResourceFactory
-import sun.tools.jstat.Literal
+import org.apache.jena.rdf.model.Resource
 import java.io.File
 import kotlin.collections.List
 
@@ -11,7 +11,7 @@ abstract class RobotCommand(val name: String,
     abstract fun executeCommand(args: List<String>)
 }
 
-class HelpCommand(val tmpRobot: AutonomousRobot) : RobotCommand("help", "help", "show this description", tmpRobot) {
+class HelpCommand(tmpRobot: AutonomousRobot) : RobotCommand("help", "help", "show this description", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         if (args.size != 1) {
             println("No argument needed!")
@@ -27,7 +27,7 @@ class HelpCommand(val tmpRobot: AutonomousRobot) : RobotCommand("help", "help", 
     }
 }
 
-class ExitCommand(val tmpRobot: AutonomousRobot) : RobotCommand("exit", "exit", "exit the program", tmpRobot) {
+class ExitCommand(tmpRobot: AutonomousRobot) : RobotCommand("exit", "exit", "exit the program", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         if (args.size != 1) {
             println("No argument needed!")
@@ -39,7 +39,7 @@ class ExitCommand(val tmpRobot: AutonomousRobot) : RobotCommand("exit", "exit", 
     }
 }
 
-class ListCapabilityCommand(val tmpRobot: AutonomousRobot) : RobotCommand("skills", "skills", "lists all available skills", tmpRobot) {
+class ListCapabilityCommand(tmpRobot: AutonomousRobot) : RobotCommand("skills", "skills", "lists all available skills", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         if (args.size != 1) {
             println("No argument needed!")
@@ -54,22 +54,61 @@ class ListCapabilityCommand(val tmpRobot: AutonomousRobot) : RobotCommand("skill
     }
 }
 
-class CapabilityRequireCommand(val tmpRobot: AutonomousRobot) : RobotCommand("require", "require skill_name", "lists all requirements for the skill", tmpRobot) {
+class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("require", "require skill_name", "lists all requirements for the skill", tmpRobot) {
     override fun executeCommand(args: List<String>) {
         if (args.size != 2) {
             println("Exactly one needed!")
             return
         }
 
-        // TODO check if action exists
+        var capResource : Resource? = null
 
-        val taskDescription = robot.queryMaster.getTaskDescription(args[1])
-        print("Task Description:")
-        for (task in taskDescription) {
-            print(task)
+        // check if entered capability exists
+        val capabilities = robot.queryMaster.getSubClassQuery("Capability")
+        for (cap in capabilities) {
+            if(args[1].equals(cap.localName)) {
+                capResource = cap
+                break
+            }
         }
 
-        // TODO
+        if(capResource == null) {
+            println("The entered capability does not exist!")
+            return
+        }
+
+        // get all direct and indirect capabilites and components of the entered capability
+        val cap = Capability(capResource)
+        fillCapCompWithRequiredComponentsAndCapabilities(cap)
+
+        // print
+
+    }
+
+    fun printConfigurationOfCapability(cap: Capability) {
+        
+    }
+
+    // TODO maybe loop checking - add parent and look for same name occurrence
+    fun fillCapCompWithRequiredComponentsAndCapabilities(compCap: ComponentCapability) {
+        compCap.capabilities.clear()
+        compCap.components.clear()
+
+        // get all the capabilities and components the compCap
+        val capabilityResourcesCompCapDependsOn = mutableListOf<Resource>() // TODO
+        val componentResourcesCompCapDependsOn = mutableListOf<Resource>() // TODO
+
+        for (capResource in capabilityResourcesCompCapDependsOn) {
+            val cap = Capability(capResource)
+            fillCapCompWithRequiredComponentsAndCapabilities(cap)
+            compCap.capabilities.add(cap)
+        }
+
+        for (compResource in componentResourcesCompCapDependsOn) {
+            val comp = Component(compResource)
+            fillCapCompWithRequiredComponentsAndCapabilities(comp)
+            compCap.components.add(comp)
+        }
     }
 }
 
