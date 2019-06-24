@@ -40,10 +40,11 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     /** Look at Protege on how to create this dataclass.
      *  Go to your Class (e.g.: puttingThingsFromAtoB) you want to find the superclasses to it with Restrictions as you see on the right.
      *  Just write it down as you see it in Protege: "subAction exactly 1 Grabbing/Moving/Reaching/Releasing" (subActions is the part we want to get out of the Query)
-     *  actionClassIsSubclassOfDo("puttingThingsFromAtoB", "subAction", "exactly", "subActions")
+     *  specifiedObjectPropertiesFromCategoryDo("puttingThingsFromAtoB", "Action", "subAction", "exactly", "subActions")
      **/
-    data class actionClassIsSubclassOfDo(
+    data class specifiedObjectPropertiesFromCategoryDo(
             val category: String,
+            val subClassOf: String,
             val objectProperty: String,
             val quantifier: String,
             val queryVariable: String,
@@ -53,11 +54,12 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
         val queryString: String
 
         init {
-            queryString = getSpecifiedObjectPropertiesFromCategory(category, restriction1Predicate, objectProperty,
+            queryString = getSpecifiedObjectPropertiesFromCategory(category, subClassOf, restriction1Predicate, objectProperty,
                     quantifier, queryVariable, objectPropertyPrefix)
         }
 
         private fun getSpecifiedObjectPropertiesFromCategory(category: String,
+                                                             superClass: String,
                                                              restriction1Predicate: String,
                                                              objectProperty: String,
                                                              quantifier: String,
@@ -73,7 +75,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
 
             return "SELECT ?$queryVariable \n" +
                     "WHERE { \n" +
-                    ":$category rdfs:subClassOf* :Action . \n" +
+                    ":$category rdfs:subClassOf* :$superClass . \n" +
                     ":$category rdfs:subClassOf* ?Restriction . \n" +
                     "?Restriction owl:$restriction1Predicate $objectPropertyPrefix:$objectProperty . \n" +
                     "?Restriction owl:$resolvedRestriction2Predicate ?$queryVariable . \n" +
@@ -380,8 +382,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
 
     // gets the task description of a composed action in the right order
     fun getTaskDescription(composedActionClass: String): MutableList<String> {
-        val subActionsDo = actionClassIsSubclassOfDo(composedActionClass, "subAction", "some", "SubActions")
-        val subOrderingsDo = actionClassIsSubclassOfDo(composedActionClass, "orderingConstraints", "value", "Orderings")
+        val subActionsDo = specifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "subAction", "some", "SubActions")
+        val subOrderingsDo = specifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "orderingConstraints", "value", "Orderings")
 
         val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsDo.queryString), "SubActions")
                 ?: throw Exception("QueryMaster::getTaskDescription(): " +
@@ -473,5 +475,11 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
                         "}\n"
         return getVariableFromResultSet(executeSelectQuery(s), "Subclass")
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no subclass of class $superclass found. Query: \n $s \n")
+    }
+
+    fun getObjectFromDataClass(c: specifiedObjectPropertiesFromCategoryDo, queryVariable: String): MutableList<Resource> {
+        return getVariableFromResultSet(executeSelectQuery(c.queryString), queryVariable)
+                ?: throw Exception("QueryMaster::getComponentsFromDataClass(): " +
+                        "Object $queryVariable not found. Query: \n ${c.queryString} \n ")
     }
 }
