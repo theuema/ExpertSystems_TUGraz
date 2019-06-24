@@ -31,6 +31,20 @@ fun main(args: Array<String>) {
 //             val actionClass = ontModelManager.ontModel.getOntClass(ontPrefix + "Action")
 //             println("RESULT::getOntClass() returned $actionClass \n\n")
 
+/* Demo 01
+* Show components of the capability move_arm
+* */
+            val q = QueryMaster(ontModel = ontModelManager.ontModel, ontPrefix = ontPrefixUrl)
+            val componentsForMoveArmDo =
+                    QueryMaster.specifiedObjectPropertiesFromCategoryDo("move_arm", "Capability",
+                            "dependsOnComponent", "some", "components", "comp")
+            val components = q.getObjectFromDataClass(componentsForMoveArmDo, "components")
+            print("Components of move_arm: \n")
+            for (comp in components) {
+                print(comp.localName + "\n")
+            }
+            print("\n")
+
         }
     } catch (e: Exception) {
         println("ExpertSystem:: ${e.printStackTrace()}")
