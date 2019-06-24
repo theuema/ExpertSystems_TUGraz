@@ -1,8 +1,4 @@
-import org.apache.jena.ontology.Individual
-import org.apache.jena.rdf.model.ResourceFactory
 import org.apache.jena.rdf.model.Resource
-import java.io.File
-import kotlin.collections.List
 
 abstract class RobotCommand(val name: String,
                             val usage: String,
@@ -46,9 +42,9 @@ class ListCapabilityCommand(tmpRobot: AutonomousRobot) : RobotCommand("caps", "c
             return
         }
         val capabilities = robot.queryMaster.getSubClassQuery("Capability")
-        print("Capabilities: \n")
+        println("\n Capabilities:")
         for (cap in capabilities) {
-            print(cap.localName + "\n")
+            println(cap.localName)
         }
         print("\n")
     }
@@ -61,18 +57,18 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
             return
         }
 
-        var capResource : Resource? = null
+        var capResource: Resource? = null
 
         // check if entered capability exists
         val capabilities = robot.queryMaster.getSubClassQuery("Capability")
         for (cap in capabilities) {
-            if(args[1].equals(cap.localName)) {
+            if (args[1].equals(cap.localName)) {
                 capResource = cap
                 break
             }
         }
 
-        if(capResource == null) {
+        if (capResource == null) {
             println("The entered capability does not exist!")
             return
         }
@@ -96,8 +92,8 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
 
         // get all the capabilities and components the compCap
 
-        var capabilityResourcesCompCapDependsOn : MutableList<Resource>? = null
-        var componentResourcesCompCapDependsOn : MutableList<Resource>? = null
+        var capabilityResourcesCompCapDependsOn: MutableList<Resource>? = null
+        var componentResourcesCompCapDependsOn: MutableList<Resource>? = null
 
         when (compCap) {
             is Capability -> {
@@ -125,31 +121,31 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
         }
     }
 
-    fun getAllCapabilityResourcesOfCapability(capability: Capability) : MutableList<Resource> {
+    fun getAllCapabilityResourcesOfCapability(capability: Capability): MutableList<Resource> {
         val queryObject = QueryMaster.SpecifiedObjectPropertiesFromCategoryDo(capability.resource.localName,
-                "Capability","dependsOnCapability","some","capabilities")
-        val capabilityResources = robot.queryMaster.getObjectFromDataClass(queryObject,"capabilities")
+                "Capability", "dependsOnCapability", "some", "capabilities")
+        val capabilityResources = robot.queryMaster.getObjectFromDataClass(queryObject, "capabilities")
         return capabilityResources
     }
 
-    fun getAllComponentResourcesOfCapability(capability: Capability) : MutableList<Resource> {
+    fun getAllComponentResourcesOfCapability(capability: Capability): MutableList<Resource> {
         val queryObject = QueryMaster.SpecifiedObjectPropertiesFromCategoryDo(capability.resource.localName,
-                "Capability","dependsOnComponent","some","components", "comp")
-        val componentResources = robot.queryMaster.getObjectFromDataClass(queryObject,"components")
+                "Capability", "dependsOnComponent", "some", "components", "comp")
+        val componentResources = robot.queryMaster.getObjectFromDataClass(queryObject, "components")
         return componentResources
     }
 
-    fun getAllCapabilityResourcesOfComponent(component: Component) : MutableList<Resource> {
+    fun getAllCapabilityResourcesOfComponent(component: Component): MutableList<Resource> {
         val queryObject = QueryMaster.SpecifiedObjectPropertiesFromCategoryDo(component.resource.localName,
-                "Component","dependsOnCapability","some","capabilities", "", "comp")
-        val capabilityResources = robot.queryMaster.getObjectFromDataClass(queryObject,"capabilities")
+                "Component", "dependsOnCapability", "some", "capabilities", "", "comp")
+        val capabilityResources = robot.queryMaster.getObjectFromDataClass(queryObject, "capabilities")
         return capabilityResources
     }
 
-    fun getAllComponentResourcesOfComponent(component: Component) : MutableList<Resource> {
+    fun getAllComponentResourcesOfComponent(component: Component): MutableList<Resource> {
         val queryObject = QueryMaster.SpecifiedObjectPropertiesFromCategoryDo(component.resource.localName,
-                "Component","dependsOnComponent","some","components", "comp", "comp")
-        val componentResources = robot.queryMaster.getObjectFromDataClass(queryObject,"components")
+                "Component", "dependsOnComponent", "some", "components", "comp", "comp")
+        val componentResources = robot.queryMaster.getObjectFromDataClass(queryObject, "components")
         return componentResources
     }
 }
