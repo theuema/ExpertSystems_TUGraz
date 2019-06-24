@@ -29,10 +29,11 @@ fun main(args: Array<String>) {
 * */
             val q = QueryMaster(ontModel = ontModelManager.ontModel, ontPrefix = ontPrefixUrl)
             val componentsForMoveArmDo =
-                    QueryMaster.SpecifiedObjectPropertiesFromCategoryDo("move_arm", "Capability",
-                            "dependsOnComponent", "some", "components", "comp")
+                    QueryMaster.SpecifiedObjectPropertiesFromCategoryDo("ArmMotionController", "Component",
+                            "dependsOnComponent", "some", "components", "comp", "comp")
+
             val components = q.getObjectFromDataClass(componentsForMoveArmDo, "components")
-            print("Components of move_arm: \n")
+            print("Components of ArmMotionController: \n")
             for (comp in components) {
                 print(comp.localName + "\n")
             }

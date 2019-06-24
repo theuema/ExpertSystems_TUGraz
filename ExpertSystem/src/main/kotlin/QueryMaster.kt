@@ -68,8 +68,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
 
             return "SELECT ?$queryVariable \n" +
                     "WHERE { \n" +
-                    ":$category rdfs:subClassOf* $superClassPrefix:$superClass . \n" +
-                    ":$category rdfs:subClassOf* ?Restriction . \n" +
+                    "$superClassPrefix:$category rdfs:subClassOf* $superClassPrefix:$superClass . \n" +
+                    "$superClassPrefix:$category rdfs:subClassOf* ?Restriction . \n" +
                     "?Restriction owl:$restriction1Predicate $objectPropertyPrefix:$objectProperty . \n" +
                     "?Restriction owl:$resolvedRestriction2Predicate ?$queryVariable . \n" +
                     "}\n"
