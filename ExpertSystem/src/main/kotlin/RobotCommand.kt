@@ -48,7 +48,7 @@ class ListCapabilityCommand(tmpRobot: AutonomousRobot) : RobotCommand("caps", "c
         val capabilities = robot.queryMaster.getSubClassQuery("Capability")
         print("Capabilities: \n")
         for (cap in capabilities) {
-            print(cap.localName + "\n")
+            print(" " + cap.localName + "\n")
         }
         print("\n")
     }
@@ -81,12 +81,31 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
         val cap = Capability(capResource)
         fillCapCompWithRequiredComponentsAndCapabilities(cap)
 
-        // print
-
+        // print the configuration of the chosen capability
+        println("The capability ${capResource.localName} needs the following configuration (consisting of capabilites and components):")
+        printConfigurationOfCompCap(cap, 0)
     }
 
-    fun printConfigurationOfCapability(cap: Capability) {
+    fun printConfigurationOfCompCap(compCap: ComponentCapability, numBanks: Int) {
+        for (blankIndex in 0..(numBanks-1))
+            print(" ")
 
+        if(numBanks != 0) {
+            print(compCap.resource.localName + " (")
+
+            when (compCap) {
+                is Capability -> print("Capability")
+                is Component -> print("Component")
+                else -> throw java.lang.Exception("The chosen class is not supported!!")
+            }
+
+            println(")")
+        }
+
+        for (cap in compCap.capabilities)
+            printConfigurationOfCompCap(cap, numBanks+2)
+        for (comp in compCap.components)
+            printConfigurationOfCompCap(comp, numBanks+2)
     }
 
     // TODO maybe loop checking - add parent and look for same name occurrence
@@ -96,8 +115,8 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
 
         // get all the capabilities and components the compCap
 
-        var capabilityResourcesCompCapDependsOn : MutableList<Resource>? = null
-        var componentResourcesCompCapDependsOn : MutableList<Resource>? = null
+        var capabilityResourcesCompCapDependsOn : MutableList<Resource>?
+        var componentResourcesCompCapDependsOn : MutableList<Resource>?
 
         when (compCap) {
             is Capability -> {
