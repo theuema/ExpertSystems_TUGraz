@@ -40,9 +40,9 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     /** Look at Protege on how to create this dataclass.
      *  Go to your Class (e.g.: puttingThingsFromAtoB) you want to find the superclasses to it with Restrictions as you see on the right.
      *  Just write it down as you see it in Protege: "subAction exactly 1 Grabbing/Moving/Reaching/Releasing" (subActions is the part we want to get out of the Query)
-     *  specifiedObjectPropertiesFromCategoryDo("puttingThingsFromAtoB", "Action", "subAction", "exactly", "subActions")
+     *  SpecifiedObjectPropertiesFromCategoryDo("puttingThingsFromAtoB", "Action", "subAction", "exactly", "subActions")
      **/
-    data class specifiedObjectPropertiesFromCategoryDo(
+    data class SpecifiedObjectPropertiesFromCategoryDo(
             val category: String,
             val subClassOf: String,
             val objectProperty: String,
@@ -384,8 +384,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
 
     // gets the task description of a composed action in the right order
     fun getTaskDescription(composedActionClass: String): MutableList<String> {
-        val subActionsDo = specifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "subAction", "some", "SubActions")
-        val subOrderingsDo = specifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "orderingConstraints", "value", "Orderings")
+        val subActionsDo = SpecifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "subAction", "some", "SubActions")
+        val subOrderingsDo = SpecifiedObjectPropertiesFromCategoryDo(composedActionClass, "Action", "orderingConstraints", "value", "Orderings")
 
         val subActionResources = getVariableFromResultSet(executeSelectQuery(subActionsDo.queryString), "SubActions")
                 ?: throw Exception("QueryMaster::getTaskDescription(): " +
@@ -480,7 +480,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no subclass of class $superclass found. Query: \n $s \n")
     }
 
-    fun getObjectFromDataClass(c: specifiedObjectPropertiesFromCategoryDo, queryVariable: String): MutableList<Resource> {
+    fun getObjectFromDataClass(c: SpecifiedObjectPropertiesFromCategoryDo, queryVariable: String): MutableList<Resource> {
         return getVariableFromResultSet(executeSelectQuery(c.queryString), queryVariable)
                 ?: throw Exception("QueryMaster::getComponentsFromDataClass(): " +
                         "Object $queryVariable not found. Query: \n ${c.queryString} \n ")
