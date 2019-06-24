@@ -49,13 +49,14 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
             val quantifier: String,
             val queryVariable: String,
             val objectPropertyPrefix: String = "",
+            val superClassPrefix: String = "",
             val restriction1Predicate: String = "onProperty"
     ) {
         val queryString: String
 
         init {
             queryString = getSpecifiedObjectPropertiesFromCategory(category, subClassOf, restriction1Predicate, objectProperty,
-                    quantifier, queryVariable, objectPropertyPrefix)
+                    quantifier, queryVariable, objectPropertyPrefix, superClassPrefix)
         }
 
         private fun getSpecifiedObjectPropertiesFromCategory(category: String,
@@ -64,7 +65,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
                                                              objectProperty: String,
                                                              quantifier: String,
                                                              queryVariable: String,
-                                                             objectPropertyPrefix: String): String {
+                                                             objectPropertyPrefix: String,
+                                                             superClassPrefix: String): String {
 
             val resolvedRestriction2Predicate = when (quantifier) {
                 "exactly" -> "onClass"
@@ -75,7 +77,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
 
             return "SELECT ?$queryVariable \n" +
                     "WHERE { \n" +
-                    ":$category rdfs:subClassOf* :$superClass . \n" +
+                    ":$category rdfs:subClassOf* $superClassPrefix:$superClass . \n" +
                     ":$category rdfs:subClassOf* ?Restriction . \n" +
                     "?Restriction owl:$restriction1Predicate $objectPropertyPrefix:$objectProperty . \n" +
                     "?Restriction owl:$resolvedRestriction2Predicate ?$queryVariable . \n" +
