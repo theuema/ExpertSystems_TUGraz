@@ -114,8 +114,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
             when (obj.get(name)) {
                 is Resource -> ret.add(obj.getResource(name))
                 is Literal -> throw Exception("QueryMaster::getVariableFromResultSet(): result for $name was Literal.")
-            // maybe we need to change else -> to optional: ret.add(null)
-            // if we need to check for other object we actually don't want or just 'continue' if we find other objects..
+                // maybe we need to change else -> to optional: ret.add(null)
+                // if we need to check for other object we actually don't want or just 'continue' if we find other objects..
                 else -> throw Exception("QueryMaster::getVariableFromResultSet(): no variable $name in actual QuerySolution.")
             }
         }
@@ -471,7 +471,8 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     fun getSubClassQuery(superclass: String): MutableList<Resource> {
         val s =
                 "SELECT ?Subclass \n" +
-                        "WHERE { ?Subclass rdfs:subClassOf* :$superclass . \n" +
+                        "WHERE {?Subclass rdfs:subClassOf* :$superclass . \n" +
+                        "FILTER (?Subclass != :$superclass) \n" +
                         "}\n"
         return getVariableFromResultSet(executeSelectQuery(s), "Subclass")
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no subclass of class $superclass found. Query: \n $s \n")
