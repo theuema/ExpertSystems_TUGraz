@@ -7,7 +7,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     private val srdl2 = "http://ias.cs.tum.edu/kb/srdl2.owl#"
     private val owl2xml = "http://www.w3.org/2006/12/owl2-xml#"
     private val knowrob = "http://ias.cs.tum.edu/kb/knowrob.owl#"
-    private val srdl2comp = "http://ias.cs.tum.edu/kb/srdl2-comp.owl#"
+
     private val computable = "http://ias.cs.tum.edu/kb/computable.owl#"
     private val dc = "http://purl.org/dc/elements/1.1/"
     // todo: remove prefixe at the end da wsl nie gebraucht
@@ -16,6 +16,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     private val owl = "http://www.w3.org/2002/07/owl#"
     private val rdfs = "http://www.w3.org/2000/01/rdf-schema#"
     private val xsd = "http://www.w3.org/2001/XMLSchema#"
+    private val comp = "http://ias.cs.tum.edu/kb/srdl2-comp.owl#"
     private val queryPrefix: String
     private val control = "http://ias.cs.tum.edu/kb/srdl2-cap.owl#"
 
@@ -32,6 +33,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
                 "PREFIX owl: <$owl> \n" +
                 "PREFIX rdfs: <$rdfs> \n" +
                 "PREFIX xsd: <$xsd> \n" +
+                "PREFIX comp: <$comp> \n" +
                 "PREFIX : <$ontPrefix> "
     }
 
@@ -41,33 +43,39 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
      *  actionClassIsSubclassOfDo("puttingThingsFromAtoB", "subAction", "exactly", "subActions")
      **/
     data class actionClassIsSubclassOfDo(
-            val composedActionClass: String,
-            val restriction1Object: String,
-            val restriction2Predicate: String,
+            val category: String,
+            val objectProperty: String,
+            val quantifier: String,
             val queryVariable: String,
+            val objectPropertyPrefix: String = "",
             val restriction1Predicate: String = "onProperty"
     ) {
         val queryString: String
 
         init {
-            queryString = getActionSuperclassFromMultipleRestrictionS(composedActionClass, restriction1Predicate, restriction1Object, restriction2Predicate, queryVariable)
+            queryString = getSpecifiedObjectPropertiesFromCategory(category, restriction1Predicate, objectProperty,
+                    quantifier, queryVariable, objectPropertyPrefix)
         }
 
-        private fun getActionSuperclassFromMultipleRestrictionS(composedActionClass: String, restriction1Predicate: String,
-                                                                restriction1Object: String, restriction2Predicate: String, queryVariable: String): String {
+        private fun getSpecifiedObjectPropertiesFromCategory(category: String,
+                                                             restriction1Predicate: String,
+                                                             objectProperty: String,
+                                                             quantifier: String,
+                                                             queryVariable: String,
+                                                             objectPropertyPrefix: String): String {
 
-            val resolvedRestriction2Predicate = when (restriction2Predicate) {
+            val resolvedRestriction2Predicate = when (quantifier) {
                 "exactly" -> "onClass"
                 "value" -> "hasValue"
                 "some" -> "someValuesFrom"
-                else -> throw Exception("QueryMaster::getActionSuperclassFromMultipleRestrictionS() $restriction2Predicate not handled yet!")
+                else -> throw Exception("QueryMaster::getSpecifiedObjectPropertiesFromCategory() $quantifier not handled yet!")
             }
 
             return "SELECT ?$queryVariable \n" +
                     "WHERE { \n" +
-                    ":$composedActionClass rdfs:subClassOf* :Action . \n" +
-                    ":$composedActionClass rdfs:subClassOf* ?Restriction . \n" +
-                    "?Restriction owl:$restriction1Predicate :$restriction1Object . \n" +
+                    ":$category rdfs:subClassOf* :Action . \n" +
+                    ":$category rdfs:subClassOf* ?Restriction . \n" +
+                    "?Restriction owl:$restriction1Predicate $objectPropertyPrefix:$objectProperty . \n" +
                     "?Restriction owl:$resolvedRestriction2Predicate ?$queryVariable . \n" +
                     "}\n"
         }
