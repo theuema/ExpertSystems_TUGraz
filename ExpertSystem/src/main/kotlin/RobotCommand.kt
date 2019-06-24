@@ -79,32 +79,41 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
         fillCapCompWithRequiredComponentsAndCapabilities(cap)
 
         // print the configuration of the chosen capability
-        println("${robot.robiName}The capability ${capResource.localName} needs the following configuration (consisting of capabilites and components):")
+        println("${robot.robiName}Found configuration for capability ${capResource.localName}: " +
+                "(hierarchically consisting of capabilities and components)")
         println()
-        printConfigurationOfCompCap(cap, 0)
+        val compCapSet = mutableSetOf<String>()
+        printConfigurationOfCompCap(cap, 0, compCapSet)
+        println()
+        println("${robot.robiName}Simple list of all capabilities and components needed: (no duplications)")
+        println()
+        for (name in compCapSet) {
+            println("  $name")
+        }
         println()
     }
 
-    fun printConfigurationOfCompCap(compCap: ComponentCapability, numBanks: Int) {
-        for (blankIndex in 0..(numBanks - 1))
-            print(" ")
-
+    fun printConfigurationOfCompCap(compCap: ComponentCapability, numBanks: Int, compCapSet: MutableSet<String>) {
         if (numBanks != 0) {
-            print(compCap.resource.localName + " (")
+            print("  ")
+            for (blankIndex in 2..(numBanks - 1))
+                print("-")
+            var resourceName = compCap.resource.localName + " ("
 
             when (compCap) {
-                is Capability -> print("Capability")
-                is Component -> print("Component")
+                is Capability -> resourceName += "Capability"
+                is Component -> resourceName += "Component"
                 else -> throw java.lang.Exception("The chosen class is not supported!!")
             }
-
-            println(")")
+            resourceName += ")"
+            println(resourceName)
+            compCapSet.add(resourceName)
         }
 
         for (cap in compCap.capabilities)
-            printConfigurationOfCompCap(cap, numBanks + 2)
+            printConfigurationOfCompCap(cap, numBanks + 2, compCapSet)
         for (comp in compCap.components)
-            printConfigurationOfCompCap(comp, numBanks + 2)
+            printConfigurationOfCompCap(comp, numBanks + 2, compCapSet)
     }
 
     // TODO maybe loop checking - add parent and look for same name occurrence
