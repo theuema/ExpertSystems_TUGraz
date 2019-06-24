@@ -481,8 +481,6 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     }
 
     fun getObjectFromDataClass(c: SpecifiedObjectPropertiesFromCategoryDo, queryVariable: String): MutableList<Resource> {
-        return getVariableFromResultSet(executeSelectQuery(c.queryString), queryVariable)
-                ?: throw Exception("QueryMaster::getComponentsFromDataClass(): " +
-                        "Object $queryVariable not found. Query: \n ${c.queryString} \n ")
+        return getVariableFromResultSet(executeSelectQuery(c.queryString), queryVariable) ?: mutableListOf()
     }
 }
