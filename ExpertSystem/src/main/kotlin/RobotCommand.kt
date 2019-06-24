@@ -42,11 +42,12 @@ class ListCapabilityCommand(tmpRobot: AutonomousRobot) : RobotCommand("caps", "c
             return
         }
         val capabilities = robot.queryMaster.getSubClassQuery("Capability")
-        println("\n Capabilities:")
+        println("${robot.robiName}Found the following Capabilities:")
+        println()
         for (cap in capabilities) {
             println(" " + cap.localName)
         }
-        print("\n")
+        println()
     }
 }
 
@@ -78,8 +79,10 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
         fillCapCompWithRequiredComponentsAndCapabilities(cap)
 
         // print the configuration of the chosen capability
-        println("The capability ${capResource.localName} needs the following configuration (consisting of capabilites and components):")
+        println("${robot.robiName}The capability ${capResource.localName} needs the following configuration (consisting of capabilites and components):")
+        println()
         printConfigurationOfCompCap(cap, 0)
+        println()
     }
 
     fun printConfigurationOfCompCap(compCap: ComponentCapability, numBanks: Int) {

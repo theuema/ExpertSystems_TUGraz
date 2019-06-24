@@ -5,12 +5,13 @@ class AutonomousRobot(val ontPrefix: String, val ontModelManager: OntologyModelM
                     CapabilityRequireCommand(this), ExitCommand(this))
     val queryMaster = QueryMaster(ontModelManager.ontModel, ontPrefix)
     var shouldContinue = true
+    val robiName = "~\$Robi : "
 
     fun run() {
         findAndExecuteCommand(listOf("help"))
 
         while (shouldContinue) {
-            print("~\$Robi : ")
+            print(robiName)
             val args = readLine()!!.split(' ')
 
             if (!findAndExecuteCommand(args))
