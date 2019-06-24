@@ -1,5 +1,3 @@
-import org.apache.jena.rdf.model.Resource
-
 fun main(args: Array<String>) {
     // Settings
     val robotActive = true
@@ -11,7 +9,7 @@ fun main(args: Array<String>) {
     val ontModelManager = OntologyModelManager(ontPrefixUrl)
 
     try {
-        val robot = AutonomousRobot(ontName, ontPrefixUrl, ontModelManager)
+        val robot = AutonomousRobot(ontPrefixUrl, ontModelManager)
         if (robotActive) robot.run() else {
 
             // inspect model and/or test
@@ -25,11 +23,6 @@ fun main(args: Array<String>) {
                 else ontModelManager.ontModel.write(System.out, "N-TRIPLES")
                 println("\n\n")
             }
-
-            /* Demo of how to see Statements and get a certain class:*/
-//             ontModelManager.showNumberOfStatementsFromActualModel(20)
-//             val actionClass = ontModelManager.ontModel.getOntClass(ontPrefix + "Action")
-//             println("RESULT::getOntClass() returned $actionClass \n\n")
 
 /* Demo 01
 * Show components of the capability move_arm
