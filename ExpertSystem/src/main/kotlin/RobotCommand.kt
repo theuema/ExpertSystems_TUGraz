@@ -108,40 +108,104 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
     }
 
     // TODO maybe loop checking - add parent and look for same name occurrence
+    fun fillCapCompWithRequiredComponentsAndCapabilities(compCapBase: ComponentCapabilityBase) {
+        // get all the capabilities and components the compCapBase
 
-    // TODO all things in hierarchy and only one appearance
-    fun fillCapCompWithRequiredComponentsAndCapabilities(compCap: ComponentCapability) {
-        compCap.capabilities.clear()
-        compCap.components.clear()
-
-        // get all the capabilities and components the compCap
-
-        var capabilityResourcesCompCapDependsOn: MutableList<Resource>?
-        var componentResourcesCompCapDependsOn: MutableList<Resource>?
-
-        when (compCap) {
+        when (compCapBase) {
             is Capability -> {
-                capabilityResourcesCompCapDependsOn = getAllCapabilityResourcesOfCapability(compCap)
-                componentResourcesCompCapDependsOn = getAllComponentResourcesOfCapability(compCap)
+                compCapBase.capabilities.clear()
+                compCapBase.components.clear()
+                var capabilityResourcesCompCapDependsOn = getAllCapabilityResourcesOfCapability(compCapBase)
+                var componentResourcesCompCapDependsOn = getAllComponentResourcesOfCapability(compCapBase)
+
+                var numNeededCompsCaps : Int = 0
+
+                for (capResource in capabilityResourcesCompCapDependsOn) {
+                    val cap = Capability(capResource)
+                    fillCapCompWithRequiredComponentsAndCapabilities(cap)
+                    compCapBase.capabilities.add(cap)
+                    numNeededCompsCaps += cap.minNumberComponentsCapabilites
+                }
+
+                for (compResource in componentResourcesCompCapDependsOn) {
+                    val comp = Component(compResource)
+                    fillCapCompWithRequiredComponentsAndCapabilities(comp)
+                    compCapBase.components.add(comp)
+                    numNeededCompsCaps += comp.minNumberComponentsCapabilites
+                }
+
+                compCapBase.minNumberComponentsCapabilites = numNeededCompsCaps
             }
             is Component -> {
-                capabilityResourcesCompCapDependsOn = getAllCapabilityResourcesOfComponent(compCap)
-                componentResourcesCompCapDependsOn = getAllComponentResourcesOfComponent(compCap)
+                compCapBase.capabilities.clear()
+                compCapBase.components.clear()
+                var capabilityResourcesCompCapDependsOn = getAllCapabilityResourcesOfComponent(compCapBase)
+                var componentResourcesCompCapDependsOn = getAllComponentResourcesOfComponent(compCapBase)
+
+                var numNeededCompsCaps : Int = 0
+
+                // TODO make possible with alternative interpretations
+                for (capResource in capabilityResourcesCompCapDependsOn) {
+                    val cap = Capability(capResource)
+                    fillCapCompWithRequiredComponentsAndCapabilities(cap)
+                    compCapBase.capabilities.add(cap)
+                    numNeededCompsCaps += cap.minNumberComponentsCapabilites
+                }
+
+                for (compResource in componentResourcesCompCapDependsOn) {
+                    val comp = Component(compResource)
+                    fillCapCompWithRequiredComponentsAndCapabilities(comp)
+                    compCapBase.components.add(comp)
+                    numNeededCompsCaps += comp.minNumberComponentsCapabilites
+                }
+
+                compCapBase.minNumberComponentsCapabilites = numNeededCompsCaps
+            }
+            is AlternativeCapabilities -> {
+                // fill all the alternative capabilites with its components and capabilites
+                for(cap in compCapBase.capabilities)
+                    fillCapCompWithRequiredComponentsAndCapabilities(cap)
+
+                // assign cap with least minNumberComponentsCapabilites to compCapBase
+                var curMinNumberComponentsCapabilites : Int = Int.MAX_VALUE
+                var curCapability : Capability? = null
+
+                for (cap in compCapBase.capabilities) {
+                    if(cap.minNumberComponentsCapabilites < curMinNumberComponentsCapabilites) {
+                        curMinNumberComponentsCapabilites = cap.minNumberComponentsCapabilites
+                        curCapability = cap
+                    }
+                }
+
+                if(curCapability ==  null)
+                    throw Exception("Capability must not be null!!")
+
+                compCapBase.minNumberComponentsCapabilites = curMinNumberComponentsCapabilites
+                compCapBase.capWithMinNumCompsCaps = curCapability
+            }
+            is AlternativeComponents -> {
+                // fill all the alternative components with its components and capabilites
+                for(comp in compCapBase.components)
+                    fillCapCompWithRequiredComponentsAndCapabilities(comp)
+
+                // assign comp with least minNumberComponentsCapabilites to compCapBase
+                var curMinNumberComponentsCapabilites : Int = Int.MAX_VALUE
+                var curComponent : Component? = null
+
+                for (comp in compCapBase.components) {
+                    if(comp.minNumberComponentsCapabilites < curMinNumberComponentsCapabilites) {
+                        curMinNumberComponentsCapabilites = comp.minNumberComponentsCapabilites
+                        curComponent = comp
+                    }
+                }
+
+                if(curComponent ==  null)
+                    throw Exception("Component must not be null!!")
+
+                compCapBase.minNumberComponentsCapabilites = curMinNumberComponentsCapabilites
+                compCapBase.compWithMinNumCompsCaps = curComponent
             }
             else -> throw java.lang.Exception("The chosen class is not supported!!")
-        }
-
-
-        for (capResource in capabilityResourcesCompCapDependsOn) {
-            val cap = Capability(capResource)
-            fillCapCompWithRequiredComponentsAndCapabilities(cap)
-            compCap.capabilities.add(cap)
-        }
-
-        for (compResource in componentResourcesCompCapDependsOn) {
-            val comp = Component(compResource)
-            fillCapCompWithRequiredComponentsAndCapabilities(comp)
-            compCap.components.add(comp)
         }
     }
 
