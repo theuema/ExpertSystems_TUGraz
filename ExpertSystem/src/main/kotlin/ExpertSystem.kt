@@ -7,7 +7,8 @@ fun main(args: Array<String>) {
     // Ontology definitions
     val ontName = "srdl2-cap"
     val ontPrefixUrl = "http://ias.cs.tum.edu/kb/" + ontName + ".owl#"
-    val ontModelManager = OntologyModelManager(ontPrefixUrl)
+    val localFilePath = "file:ontologies/" + ontName + ".owl"
+    val ontModelManager = OntologyModelManager(localFilePath)
 
     try {
         val robot = AutonomousRobot(ontPrefixUrl, ontModelManager)
