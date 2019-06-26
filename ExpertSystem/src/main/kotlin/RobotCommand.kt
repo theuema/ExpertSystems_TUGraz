@@ -91,9 +91,17 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
         println()
         printConfigurationOfCompCapSimpleWithoutDuplicate(compCapOutputSet, 0)
         println()
+        println("${robot.robiName}The smallest configuration. The alternatives are shown and not duplicates of capabilites\n" +
+                "         and components are displayed(If parent or other node above hierarchy share same component\n" +
+                "         or capability then this component or capability is not displayed at the alternative):")
+        println()
+        val smallestConfig = mutableSetOf<CapabilityComponentNoDuplicateOutput>()
+        findSmallestConfiguration(smallestConfig, cap)
+        printSmallestConfiguration(smallestConfig, 0)
+        println()
     }
 
-    class AlternativeCapabilityComponentNoDuplicateOutput(val alternativeName: String = "", val alternativesCompCapOutputSet : MutableSet<CapabilityComponentNoDuplicateOutput>)
+    class AlternativeCapabilityComponentNoDuplicateOutput(val alternativeName: String = "", val alternativesCompCapOutputSet: MutableSet<CapabilityComponentNoDuplicateOutput>)
 
     class CapabilityComponentNoDuplicateOutput(val name: String = "", val alternatives: MutableList<AlternativeCapabilityComponentNoDuplicateOutput>? = null, val alternativeTypeName: String = "") {
         override fun equals(other: Any?): Boolean {
@@ -121,7 +129,7 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
                 println(compCapOutput.name)
             } else if (compCapOutput.alternatives != null) {
                 println("Alternatives of Type " + compCapOutput.alternativeTypeName)
-                for(alt in compCapOutput.alternatives) {
+                for (alt in compCapOutput.alternatives) {
                     print("  ")
                     for (blankIndex in 0..(numBlanks + 2 - 1))
                         print("-")
@@ -132,6 +140,153 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
                 throw Exception("Name nothing and alternatives null is not supported!")
             }
         }
+    }
+
+    fun printSmallestConfiguration(smallestConfig: MutableSet<CapabilityComponentNoDuplicateOutput>, numBlanks: Int) {
+        for (compCapOutput in smallestConfig) {
+            print("  ")
+            for (blankIndex in 0..(numBlanks - 1))
+                print("-")
+
+            if (!compCapOutput.name.equals("")) {
+                println(compCapOutput.name)
+            } else if (compCapOutput.alternatives != null && compCapOutput.alternatives.size == 1) {
+                println("Chosen alternative of type ${compCapOutput.alternativeTypeName}: ${compCapOutput.alternatives[0].alternativeName}")
+                printConfigurationOfCompCapSimpleWithoutDuplicate(compCapOutput.alternatives[0].alternativesCompCapOutputSet, numBlanks + 2)
+            } else {
+                throw Exception("Name must not be nothing or alternatives must not be null and have size 1!")
+            }
+        }
+    }
+
+    // This method finds the configuration with the least components and capabilites considering all alternatives
+    // It also consideres components and capabilites of Alternatives that already occured at their parent (subparents etc.)
+    // and do not count them as another capability or component at the Alternative
+    fun findSmallestConfiguration(smallestConfig: MutableSet<CapabilityComponentNoDuplicateOutput>, compCapBase: ComponentCapabilityBase) {
+        when (compCapBase) {
+            is Capability -> {
+                if (compCapBase.parent != null && !doesCompCapOccurInParent(compCapBase, compCapBase.parent.parent)) // don't add the first capability
+                    smallestConfig.add(CapabilityComponentNoDuplicateOutput(compCapBase.resource.localName + " (Capability)"))
+                for (cap in compCapBase.capabilities)
+                    findSmallestConfiguration(smallestConfig, cap)
+                for (comp in compCapBase.components)
+                    findSmallestConfiguration(smallestConfig, comp)
+            }
+            is Component -> {
+                if (compCapBase.parent == null) throw Exception("the component parent must not be null")
+                if (!doesCompCapOccurInParent(compCapBase, compCapBase.parent.parent))
+                    smallestConfig.add(CapabilityComponentNoDuplicateOutput(compCapBase.resource.localName + " (Component)"))
+                for (cap in compCapBase.capabilities)
+                    findSmallestConfiguration(smallestConfig, cap)
+                for (comp in compCapBase.components)
+                    findSmallestConfiguration(smallestConfig, comp)
+            }
+            is AlternativeCapabilities -> {
+                var curSmallestAlternativeConfig: MutableSet<CapabilityComponentNoDuplicateOutput>? = null
+                var curSmallestAlternativeConfigSize = Int.MAX_VALUE
+                var curSmallestAlternativeName: String? = null
+
+                for (cap in compCapBase.capabilities) {
+                    val smallestConfigOfAlt = mutableSetOf<CapabilityComponentNoDuplicateOutput>()
+                    findSmallestConfiguration(smallestConfigOfAlt, cap)
+                    val curAlternativeConfigSize = determineRecuriveSizeOfSetOfCapabilityComponentNoDuplicateOutput(smallestConfigOfAlt)
+                    if (curAlternativeConfigSize < curSmallestAlternativeConfigSize) {
+                        curSmallestAlternativeConfigSize = curAlternativeConfigSize
+                        curSmallestAlternativeName = cap.resource.localName
+                        curSmallestAlternativeConfig = smallestConfigOfAlt
+                    }
+                }
+                if (curSmallestAlternativeConfig != null && curSmallestAlternativeName != null) {
+                    val alternativeCapabilitySet = AlternativeCapabilityComponentNoDuplicateOutput(curSmallestAlternativeName, curSmallestAlternativeConfig)
+                    val alternativeCapabilityList = mutableListOf<AlternativeCapabilityComponentNoDuplicateOutput>()
+                    alternativeCapabilityList.add(alternativeCapabilitySet)
+                    val alternativeCapabilitesOutput = CapabilityComponentNoDuplicateOutput("", alternativeCapabilityList, "Capabilities")
+                    smallestConfig.add(alternativeCapabilitesOutput)
+                }
+            }
+            is AlternativeComponents -> {
+                var curSmallestAlternativeConfig: MutableSet<CapabilityComponentNoDuplicateOutput>? = null
+                var curSmallestAlternativeConfigSize = Int.MAX_VALUE
+                var curSmallestAlternativeName: String? = null
+
+                for (comp in compCapBase.components) {
+                    val smallestConfigOfAlt = mutableSetOf<CapabilityComponentNoDuplicateOutput>()
+                    findSmallestConfiguration(smallestConfigOfAlt, comp)
+                    val curAlternativeConfigSize = determineRecuriveSizeOfSetOfCapabilityComponentNoDuplicateOutput(smallestConfigOfAlt)
+                    if (curAlternativeConfigSize < curSmallestAlternativeConfigSize) {
+                        curSmallestAlternativeConfigSize = curAlternativeConfigSize
+                        curSmallestAlternativeName = comp.resource.localName
+                        curSmallestAlternativeConfig = smallestConfigOfAlt
+                    }
+                }
+                if (curSmallestAlternativeConfig != null && curSmallestAlternativeName != null) {
+                    val alternativeCapabilitySet = AlternativeCapabilityComponentNoDuplicateOutput(curSmallestAlternativeName, curSmallestAlternativeConfig)
+                    val alternativeCapabilityList = mutableListOf<AlternativeCapabilityComponentNoDuplicateOutput>()
+                    alternativeCapabilityList.add(alternativeCapabilitySet)
+                    val alternativeCapabilitesOutput = CapabilityComponentNoDuplicateOutput("", alternativeCapabilityList, "Components")
+                    smallestConfig.add(alternativeCapabilitesOutput)
+                }
+
+            }
+            else -> throw java.lang.Exception("The chosen class is not supported!!")
+        }
+    }
+
+    fun determineRecuriveSizeOfSetOfCapabilityComponentNoDuplicateOutput(capCompOutputSet: MutableSet<CapabilityComponentNoDuplicateOutput>): Int {
+        var size: Int = 0
+
+        for (capCompOutput in capCompOutputSet) {
+            if (!capCompOutput.name.equals("")) {
+                size++
+            } else if (capCompOutput.alternatives != null && capCompOutput.alternatives.size == 1) {
+                size += determineRecuriveSizeOfSetOfCapabilityComponentNoDuplicateOutput(capCompOutput.alternatives[0].alternativesCompCapOutputSet)
+            } else {
+                throw Exception("Either name must be set or alternatives must not be null and alternatives has only one entry!")
+            }
+        }
+
+        return size
+    }
+
+    fun doesCompCapOccurInParent(compCapToCheck: ComponentCapabilityBase, higherHierarchicalNode: ComponentCapabilityBase?): Boolean {
+        if (higherHierarchicalNode == null)
+            return false
+
+        if (compCapToCheck is Capability) {
+            when (higherHierarchicalNode) {
+                is Capability -> {
+                    for (cap in higherHierarchicalNode.capabilities) {
+                        if (cap is Capability && cap.resource.localName.equals(compCapToCheck.resource.localName))
+                            return true
+                    }
+                }
+                is Component -> {
+                    for (cap in higherHierarchicalNode.capabilities) {
+                        if (cap is Capability && cap.resource.localName.equals(compCapToCheck.resource.localName))
+                            return true
+                    }
+                }
+            }
+        }
+
+        if (compCapToCheck is Component) {
+            when (higherHierarchicalNode) {
+                is Capability -> {
+                    for (comp in higherHierarchicalNode.components) {
+                        if (comp is Component && comp.resource.localName.equals(compCapToCheck.resource.localName))
+                            return true
+                    }
+                }
+                is Component -> {
+                    for (comp in higherHierarchicalNode.components) {
+                        if (comp is Component && comp.resource.localName.equals(compCapToCheck.resource.localName))
+                            return true
+                    }
+                }
+            }
+        }
+
+        return doesCompCapOccurInParent(compCapToCheck, higherHierarchicalNode.parent)
     }
 
     fun printConfigurationOfCompCapHierarchical(compCapBase: ComponentCapabilityBase, numBlanks: Int, compCapOutputSet: MutableSet<CapabilityComponentNoDuplicateOutput>) {
@@ -314,9 +469,9 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
     }
 
     fun checkIfLoopExists(compCapBase: ComponentCapabilityBase) {
-        var compCapName : String
+        var compCapName: String
 
-        when(compCapBase) {
+        when (compCapBase) {
             is Capability -> compCapName = compCapBase.resource.localName
             is Component -> compCapName = compCapBase.resource.localName
             else -> return
@@ -325,7 +480,7 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
         var parent = compCapBase.parent
         var loopExists = false
 
-        while(parent != null && !loopExists) {
+        while (parent != null && !loopExists) {
             when (parent) {
                 is Capability -> if (compCapName.equals(parent.resource.localName)) loopExists = true
                 is Component -> if (compCapName.equals(parent.resource.localName)) loopExists = true
@@ -333,7 +488,7 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
             parent = parent.parent
         }
 
-        if(loopExists)
+        if (loopExists)
             throw Exception("There exists a loop in the ontology when $compCapName was used. Check Ontology!")
     }
 
