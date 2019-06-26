@@ -435,7 +435,7 @@ class QueryMaster(private val model: Model, private val ontModel: OntModel, priv
             found = false
             for (tuple in tupleOrderings) {
                 if (tuple.second.equals(firstActionName)) {
-                    orderedSubActions.add(tuple.first)
+                    orderedSubActions.add(0, tuple.first)
                     firstActionName = tuple.first
                     tupleOrderings.remove(tuple)
                     found = true
