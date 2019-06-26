@@ -77,7 +77,7 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
         }
 
         // get all direct and indirect capabilites and components of the entered capability
-        val cap = Capability(capResource)
+        val cap = Capability(capResource, null)
         fillCapCompWithRequiredComponentsAndCapabilities(cap)
 
         // print the configuration of the chosen capability
@@ -93,7 +93,9 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
         println()
     }
 
-    class CapabilityComponentNoDuplicateOutput(val name: String = "", val alternatives: MutableSet<CapabilityComponentNoDuplicateOutput>? = null, val alternativeTypeName: String = "") {
+    class AlternativeCapabilityComponentNoDuplicateOutput(val alternativeName: String = "", val alternativesCompCapOutputSet : MutableSet<CapabilityComponentNoDuplicateOutput>)
+
+    class CapabilityComponentNoDuplicateOutput(val name: String = "", val alternatives: MutableList<AlternativeCapabilityComponentNoDuplicateOutput>? = null, val alternativeTypeName: String = "") {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other !is CapabilityComponentNoDuplicateOutput) return false
@@ -118,8 +120,14 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
             if (!compCapOutput.name.equals("")) {
                 println(compCapOutput.name)
             } else if (compCapOutput.alternatives != null) {
-                println("Alternative " + compCapOutput.alternativeTypeName)
-                printConfigurationOfCompCapSimpleWithoutDuplicate(compCapOutput.alternatives, numBlanks + 2)
+                println("Alternatives of Type " + compCapOutput.alternativeTypeName)
+                for(alt in compCapOutput.alternatives) {
+                    print("  ")
+                    for (blankIndex in 0..(numBlanks + 2 - 1))
+                        print("-")
+                    println("Alternative ${alt.alternativeName}")
+                    printConfigurationOfCompCapSimpleWithoutDuplicate(alt.alternativesCompCapOutputSet, numBlanks + 4)
+                }
             } else {
                 throw Exception("Name nothing and alternatives null is not supported!")
             }
@@ -162,28 +170,35 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
             }
             is AlternativeCapabilities -> {
                 println("Alternative Capabilities")
-                val alternativeCapabilitesSet = mutableSetOf<CapabilityComponentNoDuplicateOutput>()
-                val alternativeCapabilitesOutput = CapabilityComponentNoDuplicateOutput("", alternativeCapabilitesSet, "Capabilities")
+                val alternativeCapabilityList = mutableListOf<AlternativeCapabilityComponentNoDuplicateOutput>()
+                val alternativeCapabilitesOutput = CapabilityComponentNoDuplicateOutput("", alternativeCapabilityList, "Capabilities")
                 compCapOutputSet.add(alternativeCapabilitesOutput)
 
-                for (cap in compCapBase.capabilities)
-                    printConfigurationOfCompCapHierarchical(cap, numBlanks + 2, alternativeCapabilitesSet)
+                for (cap in compCapBase.capabilities) {
+                    val alternativesCompCapOutputSet = mutableSetOf<CapabilityComponentNoDuplicateOutput>()
+                    val alternativeCapabilitySet = AlternativeCapabilityComponentNoDuplicateOutput(cap.resource.localName, alternativesCompCapOutputSet)
+                    alternativeCapabilityList.add(alternativeCapabilitySet)
+                    printConfigurationOfCompCapHierarchical(cap, numBlanks + 2, alternativesCompCapOutputSet)
+                }
             }
             is AlternativeComponents -> {
                 println("Alternative Components")
-                val alternativeComponentsSet = mutableSetOf<CapabilityComponentNoDuplicateOutput>()
-                val alternativeComponentsOutput = CapabilityComponentNoDuplicateOutput("", alternativeComponentsSet, "Components")
+                val alternativeComponentList = mutableListOf<AlternativeCapabilityComponentNoDuplicateOutput>()
+                val alternativeComponentsOutput = CapabilityComponentNoDuplicateOutput("", alternativeComponentList, "Components")
                 compCapOutputSet.add(alternativeComponentsOutput)
 
-                for (comp in compCapBase.components)
-                    printConfigurationOfCompCapHierarchical(comp, numBlanks + 2, alternativeComponentsSet)
+                for (comp in compCapBase.components) {
+                    val alternativesCompCapOutputSet = mutableSetOf<CapabilityComponentNoDuplicateOutput>()
+                    val alternativeComponentSet = AlternativeCapabilityComponentNoDuplicateOutput(comp.resource.localName, alternativesCompCapOutputSet)
+                    alternativeComponentList.add(alternativeComponentSet)
+                    printConfigurationOfCompCapHierarchical(comp, numBlanks + 2, alternativesCompCapOutputSet)
+                }
 
             }
             else -> throw java.lang.Exception("The chosen class is not supported!!")
         }
     }
 
-    // TODO maybe loop checking - add parent and look for same name occurrence
     fun fillCapCompWithRequiredComponentsAndCapabilities(compCapBase: ComponentCapabilityBase) {
         // get all the capabilities and components the compCapBase
 
@@ -194,45 +209,47 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
                 var capabilityResourcesCompCapDependsOn = getAllCapabilityResourcesOfCapability(compCapBase)
                 var componentResourcesCompCapDependsOn = getAllComponentResourcesOfCapability(compCapBase)
 
-                var numNeededCompsCaps: Int = 0
-
                 for (capResource in capabilityResourcesCompCapDependsOn) {
                     var capBase: CapabilityBase?
                     if (capResource.resource != null) {
-                        capBase = Capability(capResource.resource)
+                        capBase = Capability(capResource.resource, compCapBase)
+                        checkIfLoopExists(capBase)
                     } else if (capResource.alternativeResources != null) {
                         val capabilities = mutableListOf<Capability>()
-                        for (altResource in capResource.alternativeResources)
-                            capabilities.add(Capability(altResource))
-                        capBase = AlternativeCapabilities(capabilities)
+                        capBase = AlternativeCapabilities(capabilities, compCapBase)
+                        for (altResource in capResource.alternativeResources) {
+                            val cap = Capability(altResource, capBase)
+                            capabilities.add(cap)
+                            checkIfLoopExists(cap)
+                        }
                     } else {
                         throw java.lang.Exception("At the QueryResult resource and alternativeResources must not be null!")
                     }
 
                     fillCapCompWithRequiredComponentsAndCapabilities(capBase)
                     compCapBase.capabilities.add(capBase)
-                    numNeededCompsCaps += capBase.minNumberComponentsCapabilites
                 }
 
                 for (compResource in componentResourcesCompCapDependsOn) {
                     var compBase: ComponentBase?
                     if (compResource.resource != null) {
-                        compBase = Component(compResource.resource)
+                        compBase = Component(compResource.resource, compCapBase)
+                        checkIfLoopExists(compBase)
                     } else if (compResource.alternativeResources != null) {
                         val components = mutableListOf<Component>()
-                        for (altResource in compResource.alternativeResources)
-                            components.add(Component(altResource))
-                        compBase = AlternativeComponents(components)
+                        compBase = AlternativeComponents(components, compCapBase)
+                        for (altResource in compResource.alternativeResources) {
+                            val comp = Component(altResource, compBase)
+                            components.add(comp)
+                            checkIfLoopExists(comp)
+                        }
                     } else {
                         throw java.lang.Exception("At the QueryResult resource and alternativeResources must not be null!")
                     }
 
                     fillCapCompWithRequiredComponentsAndCapabilities(compBase)
                     compCapBase.components.add(compBase)
-                    numNeededCompsCaps += compBase.minNumberComponentsCapabilites
                 }
-
-                compCapBase.minNumberComponentsCapabilites = numNeededCompsCaps
             }
             is Component -> {
                 compCapBase.capabilities.clear()
@@ -240,92 +257,84 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
                 var capabilityResourcesCompCapDependsOn = getAllCapabilityResourcesOfComponent(compCapBase)
                 var componentResourcesCompCapDependsOn = getAllComponentResourcesOfComponent(compCapBase)
 
-                var numNeededCompsCaps: Int = 0
-
                 for (capResource in capabilityResourcesCompCapDependsOn) {
                     var capBase: CapabilityBase?
                     if (capResource.resource != null) {
-                        capBase = Capability(capResource.resource)
+                        capBase = Capability(capResource.resource, compCapBase)
+                        checkIfLoopExists(capBase)
                     } else if (capResource.alternativeResources != null) {
                         val capabilities = mutableListOf<Capability>()
-                        for (altResource in capResource.alternativeResources)
-                            capabilities.add(Capability(altResource))
-                        capBase = AlternativeCapabilities(capabilities)
+                        capBase = AlternativeCapabilities(capabilities, compCapBase)
+                        for (altResource in capResource.alternativeResources) {
+                            val cap = Capability(altResource, capBase)
+                            capabilities.add(cap)
+                            checkIfLoopExists(cap)
+                        }
                     } else {
                         throw java.lang.Exception("At the QueryResult resource and alternativeResources must not be null!")
                     }
 
                     fillCapCompWithRequiredComponentsAndCapabilities(capBase)
                     compCapBase.capabilities.add(capBase)
-                    numNeededCompsCaps += capBase.minNumberComponentsCapabilites
                 }
 
                 for (compResource in componentResourcesCompCapDependsOn) {
                     var compBase: ComponentBase?
                     if (compResource.resource != null) {
-                        compBase = Component(compResource.resource)
+                        compBase = Component(compResource.resource, compCapBase)
+                        checkIfLoopExists(compBase)
                     } else if (compResource.alternativeResources != null) {
                         val components = mutableListOf<Component>()
-                        for (altResource in compResource.alternativeResources)
-                            components.add(Component(altResource))
-                        compBase = AlternativeComponents(components)
+                        compBase = AlternativeComponents(components, compCapBase)
+                        for (altResource in compResource.alternativeResources) {
+                            val comp = Component(altResource, compBase)
+                            components.add(comp)
+                            checkIfLoopExists(comp)
+                        }
                     } else {
                         throw java.lang.Exception("At the QueryResult resource and alternativeResources must not be null!")
                     }
 
                     fillCapCompWithRequiredComponentsAndCapabilities(compBase)
                     compCapBase.components.add(compBase)
-                    numNeededCompsCaps += compBase.minNumberComponentsCapabilites
                 }
-
-                compCapBase.minNumberComponentsCapabilites = numNeededCompsCaps
             }
             is AlternativeCapabilities -> {
                 // fill all the alternative capabilites with its components and capabilites
                 for (cap in compCapBase.capabilities)
                     fillCapCompWithRequiredComponentsAndCapabilities(cap)
-
-                // assign cap with least minNumberComponentsCapabilites to compCapBase
-                var curMinNumberComponentsCapabilites: Int = Int.MAX_VALUE
-                var curCapability: Capability? = null
-
-                for (cap in compCapBase.capabilities) {
-                    if (cap.minNumberComponentsCapabilites < curMinNumberComponentsCapabilites) {
-                        curMinNumberComponentsCapabilites = cap.minNumberComponentsCapabilites
-                        curCapability = cap
-                    }
-                }
-
-                if (curCapability == null)
-                    throw Exception("Capability must not be null!!")
-
-                compCapBase.minNumberComponentsCapabilites = curMinNumberComponentsCapabilites
-                compCapBase.capWithMinNumCompsCaps = curCapability
             }
             is AlternativeComponents -> {
                 // fill all the alternative components with its components and capabilites
                 for (comp in compCapBase.components)
                     fillCapCompWithRequiredComponentsAndCapabilities(comp)
-
-                // assign comp with least minNumberComponentsCapabilites to compCapBase
-                var curMinNumberComponentsCapabilites: Int = Int.MAX_VALUE
-                var curComponent: Component? = null
-
-                for (comp in compCapBase.components) {
-                    if (comp.minNumberComponentsCapabilites < curMinNumberComponentsCapabilites) {
-                        curMinNumberComponentsCapabilites = comp.minNumberComponentsCapabilites
-                        curComponent = comp
-                    }
-                }
-
-                if (curComponent == null)
-                    throw Exception("Component must not be null!!")
-
-                compCapBase.minNumberComponentsCapabilites = curMinNumberComponentsCapabilites
-                compCapBase.compWithMinNumCompsCaps = curComponent
             }
             else -> throw java.lang.Exception("The chosen class is not supported!!")
         }
+    }
+
+    fun checkIfLoopExists(compCapBase: ComponentCapabilityBase) {
+        var compCapName : String
+
+        when(compCapBase) {
+            is Capability -> compCapName = compCapBase.resource.localName
+            is Component -> compCapName = compCapBase.resource.localName
+            else -> return
+        }
+
+        var parent = compCapBase.parent
+        var loopExists = false
+
+        while(parent != null && !loopExists) {
+            when (parent) {
+                is Capability -> if (compCapName.equals(parent.resource.localName)) loopExists = true
+                is Component -> if (compCapName.equals(parent.resource.localName)) loopExists = true
+            }
+            parent = parent.parent
+        }
+
+        if(loopExists)
+            throw Exception("There exists a loop in the ontology when $compCapName was used. Check Ontology!")
     }
 
     fun getAllCapabilityResourcesOfCapability(capability: Capability): MutableList<QueryMaster.QueryResult> {
