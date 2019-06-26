@@ -152,7 +152,7 @@ class CapabilityRequireCommand(tmpRobot: AutonomousRobot) : RobotCommand("requir
                 println(compCapOutput.name)
             } else if (compCapOutput.alternatives != null && compCapOutput.alternatives.size == 1) {
                 println("Chosen alternative of type ${compCapOutput.alternativeTypeName}: ${compCapOutput.alternatives[0].alternativeName}")
-                printConfigurationOfCompCapSimpleWithoutDuplicate(compCapOutput.alternatives[0].alternativesCompCapOutputSet, numBlanks + 2)
+                printSmallestConfiguration(compCapOutput.alternatives[0].alternativesCompCapOutputSet, numBlanks + 2)
             } else {
                 throw Exception("Name must not be nothing or alternatives must not be null and have size 1!")
             }
