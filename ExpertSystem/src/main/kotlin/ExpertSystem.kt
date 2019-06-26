@@ -2,6 +2,7 @@ fun main(args: Array<String>) {
     // Settings
     val robotActive = true
     val showModel = false
+    val showDemo = false
 
     // Ontology definitions
     val ontName = "srdl2-cap"
@@ -24,20 +25,22 @@ fun main(args: Array<String>) {
                 println("\n\n")
             }
 
-/* Demo 01
-* Show components of the capability move_arm
-* */
-            val q = QueryMaster(ontModel = ontModelManager.ontModel, ontPrefix = ontPrefixUrl)
-            val componentsForMoveArmDo =
-                    QueryMaster.SpecifiedObjectPropertiesFromCategoryDo("ArmMotionController", "Component",
-                            "dependsOnComponent", "some", "components", "comp", "comp")
+            if (showDemo) {
+                // Demo 01
+                // Show components of the capability move_arm
+                val q = QueryMaster(ontModel = ontModelManager.ontModel, ontPrefix = ontPrefixUrl)
+                val componentsForMoveArmDo =
+                        QueryMaster.SpecifiedObjectPropertiesFromCategoryDo("ArmMotionController", "Component",
+                                "dependsOnComponent", "some", "components", "comp", "comp")
 
-            val components = q.getObjectFromDataClass(componentsForMoveArmDo, "components")
-            print("Components of ArmMotionController: \n")
-            for (comp in components) {
-                print(comp.localName + "\n")
+                val components = q.getObjectFromDataClass(componentsForMoveArmDo, "components")
+                print("Components of ArmMotionController: \n")
+                for (comp in components) {
+                    if (comp.resource == null) throw java.lang.Exception("The resource must not be null!")
+                    print(comp.resource.localName + "\n")
+                }
+                print("\n")
             }
-            print("\n")
 
         }
     } catch (e: Exception) {

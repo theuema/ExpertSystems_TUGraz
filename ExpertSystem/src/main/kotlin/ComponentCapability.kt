@@ -1,20 +1,18 @@
 import org.apache.jena.rdf.model.Resource
 
 abstract class ComponentCapabilityBase() {
-    var minNumberComponentsCapabilites : Int = 0
+    var minNumberComponentsCapabilites: Int = 0
 }
 
 abstract class ComponentBase() : ComponentCapabilityBase()
 abstract class CapabilityBase() : ComponentCapabilityBase()
 
-class AlternativeCapabilities() : CapabilityBase() {
-    val capabilities = mutableListOf<Capability>()
-    var capWithMinNumCompsCaps : Capability? = null
+class AlternativeCapabilities(val capabilities: MutableList<Capability>) : CapabilityBase() {
+    var capWithMinNumCompsCaps: Capability? = null
 }
 
-class AlternativeComponents() : ComponentBase() {
-    val components = mutableListOf<Component>()
-    var compWithMinNumCompsCaps : Component? = null
+class AlternativeComponents(val components: MutableList<Component>) : ComponentBase() {
+    var compWithMinNumCompsCaps: Component? = null
 }
 
 class Component(val resource: Resource) : ComponentBase() {

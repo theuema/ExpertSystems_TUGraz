@@ -2,6 +2,8 @@ import org.apache.jena.ontology.OntModel
 import org.apache.jena.query.*
 import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.Resource
+import org.apache.jena.vocabulary.OWL
+import org.apache.jena.vocabulary.RDF
 
 class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String) {
     private val rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -93,19 +95,35 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
         }
     }
 
+    class QueryResult(val resource: Resource? = null, val alternativeResources: MutableList<Resource>? = null)
+
     /** Takes a ResultSet and a variable 'name' to generate a list of objects matching that name in the given ResultSet (QuerySolution)
      *  @param results is the outcome of a previous query as ResultSet (containing multiple QuerySolution objects)
      *  @param name of the variable we are looking for (e.g.: the "Action" we need to do next..)
      *  @return List of values of the specific variable, contained in the ResultSet
      */
-    private fun getVariableFromResultSet(results: ResultSet, name: String): MutableList<Resource>? {
+    private fun getVariableFromResultSet(results: ResultSet, name: String): MutableList<QueryResult>? {
         if (!results.hasNext()) return null
-        val ret: MutableList<Resource> = mutableListOf()
+        val ret: MutableList<QueryResult> = mutableListOf()
 
         while (results.hasNext()) {
             val obj = results.next()
             when (obj.get(name)) {
-                is Resource -> ret.add(obj.getResource(name))
+                is Resource -> {
+                    val resource = obj.getResource(name)
+                    if (resource.isAnon) {
+                        val alternativeResources = mutableListOf<Resource>()
+                        if (!resource.hasProperty(OWL.unionOf)) throw Exception("Only unionOf is supported as alternatives!")
+                        var nextResourceOfUnionOf: Resource = resource.getPropertyResourceValue(OWL.unionOf)
+                        while (nextResourceOfUnionOf.isAnon) {
+                            alternativeResources.add(nextResourceOfUnionOf.getPropertyResourceValue(RDF.first))
+                            nextResourceOfUnionOf = nextResourceOfUnionOf.getPropertyResourceValue(RDF.rest)
+                        }
+                        ret.add(QueryResult(null, alternativeResources))
+                    } else {
+                        ret.add(QueryResult(resource))
+                    }
+                }
                 is Literal -> throw Exception("QueryMaster::getVariableFromResultSet(): result for $name was Literal.")
                 // maybe we need to change else -> to optional: ret.add(null)
                 // if we need to check for other object we actually don't want or just 'continue' if we find other objects..
@@ -116,7 +134,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
     }
 
     /** @Section: Public Specific Queries */
-    fun getSubClassQuery(superclass: String): MutableList<Resource> {
+    fun getSubClassQuery(superclass: String): MutableList<QueryResult> {
         val s =
                 "SELECT ?Subclass \n" +
                         "WHERE {?Subclass rdfs:subClassOf* :$superclass . \n" +
@@ -126,7 +144,7 @@ class QueryMaster(private val ontModel: OntModel, private val ontPrefix: String)
                 ?: throw Exception("ExpertSystem::getNextSuperclassQuery(): no subclass of class $superclass found. Query: \n $s \n")
     }
 
-    fun getObjectFromDataClass(c: SpecifiedObjectPropertiesFromCategoryDo, queryVariable: String): MutableList<Resource> {
+    fun getObjectFromDataClass(c: SpecifiedObjectPropertiesFromCategoryDo, queryVariable: String): MutableList<QueryResult> {
         return getVariableFromResultSet(executeSelectQuery(c.queryString), queryVariable) ?: mutableListOf()
     }
 }
