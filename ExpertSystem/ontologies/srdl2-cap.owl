@@ -101,8 +101,26 @@
         <rdfs:subClassOf rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#CollisionCheckCapability"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#dependsOnCapability"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#BaseCollisionCheckCapability"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#dependsOnCapability"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#ClosingABottleCapability"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#dependsOnComponent"/>
                 <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#CollisionMap"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#dependsOnComponent"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#ThreeAxisAccelerometer"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -231,6 +249,18 @@
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#dependsOnCapability"/>
                 <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#ArmCollisionCheckCapability"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#dependsOnCapability"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#point_head_action"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#dependsOnComponent"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#ComputationCore"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -535,9 +565,46 @@
     
 
 
+    <!-- http://ias.cs.tum.edu/kb/srdl2-comp.owl#Clock -->
+
+    <owl:Class rdf:about="http://ias.cs.tum.edu/kb/srdl2-comp.owl#Clock"/>
+    
+
+
     <!-- http://ias.cs.tum.edu/kb/srdl2-comp.owl#CollisionMap -->
 
     <owl:Class rdf:about="http://ias.cs.tum.edu/kb/srdl2-comp.owl#CollisionMap"/>
+    
+
+
+    <!-- http://ias.cs.tum.edu/kb/srdl2-comp.owl#ComputationCore -->
+
+    <owl:Class rdf:about="http://ias.cs.tum.edu/kb/srdl2-comp.owl#ComputationCore">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#dependsOnCapability"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#BaseMotionCapability"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#dependsOnCapability"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-cap.owl#VisualSLAMCapability"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#dependsOnComponent"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#Clock"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#dependsOnComponent"/>
+                <owl:someValuesFrom rdf:resource="http://ias.cs.tum.edu/kb/srdl2-comp.owl#Pr2Base"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
     
 
 
@@ -574,6 +641,18 @@
     <!-- http://ias.cs.tum.edu/kb/srdl2-comp.owl#ObjectRecognitionComponent -->
 
     <owl:Class rdf:about="http://ias.cs.tum.edu/kb/srdl2-comp.owl#ObjectRecognitionComponent"/>
+    
+
+
+    <!-- http://ias.cs.tum.edu/kb/srdl2-comp.owl#Pr2Base -->
+
+    <owl:Class rdf:about="http://ias.cs.tum.edu/kb/srdl2-comp.owl#Pr2Base"/>
+    
+
+
+    <!-- http://ias.cs.tum.edu/kb/srdl2-comp.owl#ThreeAxisAccelerometer -->
+
+    <owl:Class rdf:about="http://ias.cs.tum.edu/kb/srdl2-comp.owl#ThreeAxisAccelerometer"/>
     
 
 
