@@ -25,3 +25,6 @@ hs_err_pid*
 # own ignores
 .idea/
 .gradle/
+
+ExpertSystem/build/*
+ExpertSystem/out/*
